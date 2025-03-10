@@ -22,5 +22,5 @@ app.get('/', (req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Flomo notes available at http://localhost:${PORT}/flomo/cubxxw的笔记.html`);
+  console.log(`Flomo notes available at http://localhost:${PORT}/flomo/cubxxw.html`);
 });

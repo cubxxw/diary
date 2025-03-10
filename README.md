@@ -40,7 +40,7 @@ A modern web application that enhances flomo's exported notes with AI capabiliti
 ## Usage
 
 - The home page provides an overview of the project and quick links
-- Access your flomo notes at `/flomo/cubxxw的笔记.html`
+- Access your flomo notes at `/flomo/cubxxw.html`
 - Filter notes by date and tags
 
 ## Links

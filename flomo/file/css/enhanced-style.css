@@ -532,6 +532,79 @@ body.dark-mode .same-as-selected {
   background-color: var(--primary-hover);
 }
 
+/* 优化链接样式 */
+.memo .content a {
+  color: var(--primary-color);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--primary-color);
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.memo .content a:hover {
+  color: var(--primary-hover);
+  border-bottom: 1px solid var(--primary-hover);
+  background-color: rgba(48, 207, 121, 0.1);
+}
+
+/* 优化标签样式 */
+.tag-highlight {
+  display: inline-block;
+  background-color: var(--tag-bg);
+  color: var(--tag-color);
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  margin: 0 2px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.tag-highlight:hover {
+  background-color: var(--tag-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Search bar */
+.search-container {
+  margin: 15px 0;
+  display: flex;
+  width: 100%;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px 0 0 6px;
+  font-size: 14px;
+  color: var(--text-color);
+  background-color: var(--card-bg);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.search-button {
+  padding: 10px 15px;
+  background: var(--primary-color);
+  border: none;
+  border-radius: 0 6px 6px 0;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: var(--primary-hover);
+}
+
 /* Dark mode toggle */
 .dark-mode-toggle {
   position: fixed;
@@ -802,4 +875,62 @@ body.dark-mode .same-as-selected {
 /* 当沉浸式视图激活时处理 body 内容 */
 body.immersive-active main {
     visibility: hidden; /* 替代 aria-hidden 的视觉隐藏 */
+}
+
+/* 4. 标签筛选状态的CSS样式
+
+为标签筛选状态添加样式：
+```css
+/* 标签筛选状态样式 */
+.filter-status {
+  background: var(--card-bg);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.filter-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.clear-filter {
+  margin-left: auto;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.3s ease;
+}
+
+.clear-filter:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+/* 标签部分样式 */
+.tag-section {
+  margin-bottom: 30px;
+}
+
+.tag-section h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tag-section h3 i {
+  color: var(--primary-color);
 }
