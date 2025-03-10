@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "build": "mkdir -p _site && cp -r public/* _site/ && cp -r flomo _site/"
   },
   "repository": {
     "type": "git",
