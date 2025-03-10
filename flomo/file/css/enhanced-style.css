@@ -1,0 +1,805 @@
+/* Enhanced styling for flomo notes */
+:root {
+  --primary-color: #30cf79;
+  --primary-hover: #28b66a;
+  --text-color: #323232;
+  --text-secondary: #8d8d8d;
+  --bg-color: #f5f7fa;
+  --card-bg: #ffffff;
+  --border-color: #e6e6e6;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --tag-bg: #eef2ff;
+  --tag-color: #5a67d8;
+  --header-bg: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--text-color);
+  line-height: 1.6;
+  transition: background-color 0.3s ease;
+}
+
+/* Dark mode styles */
+body.dark-mode {
+  --bg-color: #1a1a1a;
+  --card-bg: #2d2d2d;
+  --text-color: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --border-color: #444444;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --tag-bg: #3a3f5a;
+  --tag-color: #a5b4fc;
+  --header-bg: #252525;
+}
+
+/* 移除 sticky 定位 */
+header {
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+  /* 移除以下属性 */
+  /* position: sticky; */
+  /* top: 0; */
+  /* z-index: 100; */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* 添加左侧栏样式 */
+.container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative; /* For right sidebar positioning */
+}
+
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  padding-right: 20px;
+  border-right: 1px solid var(--border-color);
+}
+
+/* Right sidebar styles */
+.right-sidebar {
+  width: 280px;
+  position: fixed;
+  right: 20px;
+  top: 100px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  z-index: 90;
+  transition: all 0.3s ease;
+}
+
+.right-sidebar h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.right-sidebar h3 i {
+  color: var(--primary-color);
+}
+
+.tag-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 25px 0;
+}
+
+.tag-list li {
+  margin-bottom: 8px;
+}
+
+.tag-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--tag-bg);
+  color: var(--tag-color);
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.tag-list a:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.tag-list .tag-count {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+.ai-find {
+  margin-bottom: 25px;
+}
+
+.ai-find input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.ai-find input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.ai-find button {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ai-find button:hover {
+  background: var(--primary-hover);
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  margin-bottom: 15px;
+}
+
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-menu a:hover {
+  background-color: var(--tag-bg);
+}
+
+.sidebar-menu i {
+  margin-right: 10px;
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.main-content {
+  flex: 1;
+  padding-left: 20px;
+}
+
+/* 调整响应式布局 */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+}
+
+header .logo {
+  text-align: center;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header .logo svg {
+  transition: transform 0.3s ease;
+}
+
+header .logo svg:hover {
+  transform: scale(1.05);
+}
+
+header .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px 15px;
+  flex-wrap: wrap;
+}
+
+header .top .user {
+  padding: 15px 0;
+}
+
+header .top .user .name {
+  color: var(--text-color);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+header .top .user .date {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 5px;
+}
+
+header .top .filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+header .top .filter button {
+  padding: 10px 15px;
+  background: var(--primary-color);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+header .top .filter button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+header .top .filter button:active {
+  transform: translateY(0);
+}
+
+header .top .filter button i {
+  font-size: 16px;
+}
+
+.custom-select {
+  position: relative;
+  min-width: 150px;
+  font-size: 14px;
+  color: var(--text-color);
+  background: var(--card-bg);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  margin-right: 10px;
+  transition: all 0.3s ease;
+}
+
+.custom-select:hover {
+  border-color: var(--primary-color);
+}
+
+.select-selected {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 6px;
+  padding: 10px 15px;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.select-selected:after {
+  position: absolute;
+  content: "";
+  top: 14px;
+  right: 15px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: var(--text-secondary) transparent transparent transparent;
+  transition: all 0.3s ease;
+}
+
+.select-selected.select-arrow-active:after {
+  border-color: transparent transparent var(--text-secondary) transparent;
+  top: 7px;
+}
+
+.select-items {
+  position: absolute;
+  background-color: var(--card-bg);
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  max-height: 250px;
+  overflow-y: auto;
+  border-radius: 6px;
+  margin-top: 5px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  border: 1px solid var(--border-color);
+}
+
+.select-items div {
+  color: var(--text-color);
+  padding: 10px 15px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.select-items div:hover,
+.same-as-selected {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .select-items div:hover,
+body.dark-mode .same-as-selected {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.select-hide {
+  display: none;
+}
+
+.memos {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.memo {
+  margin: 25px 0;
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: 12px;
+  word-wrap: break-word;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.memo:hover {
+  box-shadow: 0 10px 20px var(--shadow-color);
+  transform: translateY(-3px);
+}
+
+.memo .time {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.memo .time::before {
+  content: '🕒';
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.memo .content {
+  color: var(--text-color);
+  font-size: 16px;
+}
+
+.memo .content p {
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.memo .content p:last-child {
+  margin-bottom: 0;
+}
+
+.memo .content strong {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.memo .content ul,
+.memo .content ol {
+  padding-inline-start: 25px;
+  margin-bottom: 15px;
+}
+
+.memo .content li {
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.memo .content li:last-child {
+  margin-bottom: 0;
+}
+
+.memo .files img {
+  max-width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin: 10px 0;
+  transition: all 0.3s ease;
+}
+
+.memo .files img:hover {
+  transform: scale(1.02);
+}
+
+/* Tag styling */
+.memo .content p a,
+.memo .content p u {
+  color: #3182ce;
+  text-decoration: none;
+  border-bottom: 1px dotted #3182ce;
+  transition: all 0.2s ease;
+}
+
+.memo .content p a:hover,
+.memo .content p u:hover {
+  color: #2c5282;
+  border-bottom: 1px solid #2c5282;
+}
+
+/* Highlight tags with # */
+.tag-highlight {
+  display: inline-block;
+  background-color: var(--tag-bg);
+  color: var(--tag-color);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  margin: 0 2px;
+  transition: all 0.3s ease;
+}
+
+.tag-highlight:hover {
+  background-color: var(--tag-color);
+  color: white;
+}
+
+/* Search bar */
+.search-container {
+  margin: 15px 0;
+  display: flex;
+  width: 100%;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px 0 0 6px;
+  font-size: 14px;
+  color: var(--text-color);
+  background-color: var(--card-bg);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.search-button {
+  padding: 10px 15px;
+  background: var(--primary-color);
+  border: none;
+  border-radius: 0 6px 6px 0;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Dark mode toggle */
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.1);
+  background-color: var(--primary-hover);
+}
+
+/* Back to top button */
+.back-to-top {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  transform: scale(1.1);
+  background-color: var(--primary-hover);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  header, .memos {
+    width: 100%;
+    padding: 10px;
+  }
+  
+  header .top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  header .top .filter {
+    margin-top: 15px;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .custom-select {
+    width: 48%;
+    margin-right: 0;
+  }
+  
+  header .top .filter button {
+    width: 48%;
+  }
+  
+  .memo {
+    padding: 15px;
+  }
+}
+
+/* Animation for new memos */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 多个 .memo 定义会导致最后加载的生效 */
+.memo {
+  margin: 25px 0;  /* 原始定义在 628 行 */
+}
+
+.memo {
+  animation: fadeIn 0.5s ease-out forwards; /* 覆盖定义在 629 行 */
+}
+
+/* Loading indicator */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--primary-color);
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--text-secondary);
+}
+
+/* Enhanced immersive note view styles */
+.immersive-view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  backdrop-filter: blur(5px);
+}
+
+.immersive-view.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.immersive-content {
+  max-width: 800px;
+  width: 90%;
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  position: relative;
+  max-height: 85vh;
+  overflow-y: auto;
+  transform: translateY(20px);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  border: 1px solid var(--border-color);
+}
+
+.immersive-view.active .immersive-content {
+  transform: translateY(0);
+}
+
+.immersive-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  color: var(--text-color);
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.immersive-close:hover {
+  background: rgba(0, 0, 0, 0.2);
+  transform: rotate(90deg);
+}
+
+.immersive-time {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 15px;
+}
+
+.immersive-body {
+  font-size: 18px;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  color: var(--text-color);
+}
+
+.immersive-body p {
+  margin-bottom: 15px;
+}
+
+.immersive-body strong {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.immersive-body .tag-highlight {
+  display: inline-block;
+  background: var(--tag-bg);
+  color: var(--tag-color);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  margin: 0 2px;
+}
+
+.immersive-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.copy-text-btn, .copy-image-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.copy-text-btn:hover, .copy-image-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.copy-text-btn:active, .copy-image-btn:active {
+  transform: translateY(0);
+}
+
+/* 当沉浸式视图激活时处理 body 内容 */
+body.immersive-active main {
+    visibility: hidden; /* 替代 aria-hidden 的视觉隐藏 */
+}

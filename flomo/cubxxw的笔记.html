@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>flomo · 浮墨笔记</title>
+        <!-- 引入CSS文件 -->
+        <link rel="stylesheet" href="file/css/style.css">
+        <!-- 引入Font Awesome图标库 -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <!-- Original styles preserved for compatibility -->
+        <style type="text/css">
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: #fafafa;
+            }
+
+            header .logo {
+                text-align: center;
+                border-bottom: 1px solid #efefef;
+            }
+
+            header .top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            header .logo,
+            header .top .user {
+                padding: 40px 0;
+            }
+            header .top .user .name {
+                color: #454545;
+                font-size: 16px;
+            }
+            header .top .user .date {
+                font-size: 12px;
+                color: #9d9d9d;
+            }
+
+            header .top .filter {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            header .top .filter button {
+                padding: 9px 10px;
+                background: #30cf79;
+                border-radius: 3px;
+                color: #fff;
+                font-size: 14px;
+                border: none;
+                cursor: pointer;
+            }
+            header,
+            .memos {
+                width: 600px;
+                margin: 0 auto;
+            }
+            .memos h1 {
+                margin-top: 30px;
+            }
+            .memo {
+                margin: 20px 0;
+                background: #fff;
+                padding: 20px;
+                border-radius: 6px;
+                word-wrap: break-word;
+            }
+            .memo:hover {
+                box-shadow: 0px 2px 10px #dddddd;
+            }
+            .memo .time {
+                color: #8d8d8d;
+                font-size: 12px;
+            }
+            
+            .immersive-time {
+                color: #8d8d8d;
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+            
+            .immersive-actions {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 20px;
+                gap: 10px;
+            }
+            
+            .immersive-actions button {
+                padding: 8px 15px;
+                border-radius: 6px;
+                border: 1px solid #ddd;
+                cursor: pointer;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                background: #f5f5f5;
+                color: #333;
+            }
+            
+            .memo {
+                cursor: pointer;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            
+            .memo:hover {
+                transform: translateY(-2px);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <img src="file/img/logo.svg" alt="flomo logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAxMDAgMzAiPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzMwY2Y3OSI+ZmxvbW88L3RleHQ+PC9zdmc+'; this.onerror=null;">
+            </div>
+            <div class="top">
+                <div class="user">
+                    <div class="name">cubxxw的笔记</div>
+                    <div class="date">2023-03-10</div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="memos">
+            <div class="memo">
+                <div class="time">2025-03-10 13:33:21</div>
+                <div class="content"><p><strong>AI 剪辑工具分析</strong></p><p>主要用了两个：https://clip.opus.pro/ </p><p>还有字节的https://www.capcut.com/ </p><p></p></div>
+                <div class="files"></div>
+            </div>
+        
+            <div class="memo">
+                <div class="time">2025-03-10 10:52:24</div>
+                <div class="content"><p><strong>使用 cursor 的一些小技巧</strong></p><ol><li><p>从模板开始，通过从 GitHub 或其他来源克隆模板来开始项目，以提供坚实的基础，Cursor 内部选择"从 Repo 开始"的选项</p></li><li><p>使用智能体模式，使用 Cursor 的  agent 模式（而不是普通模式）来通过自然语言命令创建、编辑和管理文件</p></li><li><p>擅长结合 perplexity 使用，比如说我希望用 perplexity 去搜索，提供 API 的代码和示例</p></li><li><p>在 Composer 中创建新对话，保持对话简短</p></li><li><p>不断的迭代和改进</p></li><li><p>语音转文本的工具也很好用，Whispr Flow</p></li><li><p>错误交给 agent 处理是一个很明智的选择</p></li><li><p>经常提交，并且规范的追踪记录，对 cursor 来说这是一个很好的习惯</p></li><li><p>持续部署项目，使用 Vercel</p></li><li><p>记录一些常用的并且有效的 prompt ，收集</p></li></ol><p>#领域/使用技巧 </p></div>
+                <div class="files"></div>
+            </div>
+        
+            <div class="memo">
+                <div class="time">2025-03-10 10:03:56</div>
+                <div class="content"><p><strong>酒精作用下产生的反应</strong></p><p>酒精对大脑功能的抑制作用，前额叶是负责判断、决策和自控能力的区域。当这一部分功能受抑制时，人的理性判断能力和自我控制能力下降，从而可能无意识地说出平时压抑或隐藏的想法和情绪。 </p></div>
+                <div class="files"></div>
+            </div>
+        
+            <div class="memo">
+                <div class="time">2025-03-09 23:09:47</div>
+                <div class="content"><p><strong>中国的发展要用代际的眼光去看待</strong></p><p>中国大地上的事情是无穷无尽的，不要在乎一城一池的得失，要执着。</p><p>一个国家是由具体的人构成的，它由这些人创造，并且决定。只有一个国家能够拥有那些寻求真理的人，能够独立思考的人，能够记录真实的人，能够不计利害为这片土地付出的人，能够捍卫自己宪法权利的人，能够知道这个世界并不完美但仍不言乏力不言放弃的人。只有一个国家拥有这样的头脑和灵魂，我们才能说，我们为祖国骄傲。只有一个国家能够真正有这样头脑和灵魂。我们才能说我们有信心，让明天更好。</p><p>任何的机制和时代需要找其因果，我们抛开了改革开放的这个视角，改革开放的加速度其实是在2008年以后开始呈现出相对平稳、斜率下降的趋势，所以经济周期的中转点已经出现了，意识到经济是有周期的而不是无限增长的。</p><p>这代领导人是文革时期发展出来的领导人，人和制度是那个时代的产物，我们也能接受制度的倒退，相信下一代的共产党领导人的才华。</p></div>
+                <div class="files"></div>
+            </div>
+            
+            <!-- 这里可以继续添加其他memo内容 -->
+        </div>
+        
+        <!-- 引入JavaScript文件 -->
+        <script src="file/js/enhanced-script.js"></script>
+    </body>
+</html>
+    
