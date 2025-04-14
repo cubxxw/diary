@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>增强版 flomo · 浮墨笔记</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    #enhancer-header {
+      background: #30cf79;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      position: relative;
+    }
+
+    #enhancer-header h1 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    #main-container {
+      display: flex;
+      height: calc(100% - 40px);
+      width: 100%;
+    }
+
+    #sidebar {
+      width: 250px;
+      background: #f5f5f5;
+      height: 100%;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+      border-right: 1px solid #e0e0e0;
+    }
+
+    #sidebar.collapsed {
+      width: 0;
+    }
+
+    #iframe-container {
+      flex: 1;
+      height: 100%;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .enhancer-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .enhancer-buttons button {
+      background: white;
+      color: #30cf79;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .sidebar-section {
+      padding: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .sidebar-section h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .search-box {
+      display: flex;
+      margin-bottom: 10px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px 0 0 4px;
+      font-size: 14px;
+    }
+
+    .search-box button {
+      background: #30cf79;
+      color: white;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      padding: 0 10px;
+      cursor: pointer;
+    }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      background: #e9f7f0;
+      color: #30cf79;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tag:hover {
+      background: #30cf79;
+      color: white;
+    }
+
+    .date-filter select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .action-button {
+      display: flex;
+      align-items: center;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+
+    .action-button:hover {
+      background: #f0f0f0;
+    }
+
+    .action-button .icon {
+      margin-right: 8px;
+      font-size: 16px;
+      color: #30cf79;
+    }
+
+    .settings-section label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .settings-section input[type="checkbox"] {
+      margin-right: 8px;
+    }
+
+    .toggle-sidebar {
+      background: #30cf79;
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .stats-box {
+      background: white;
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+    }
+
+    .stats-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+    
+    .stats-item .value {
+      font-weight: bold;
+      color: #30cf79;
+    }
+
+    #search-results {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .result-item {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .result-item:hover {
+      background: #f0f0f0;
+    }
+
+    .result-item .highlight {
+      background: #ffffa0;
+      font-weight: bold;
+    }
+
+    .result-item .date {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .theme-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 20px;
+    }
+
+    .theme-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .theme-slider {
+      background-color: #30cf79;
+    }
+
+    input:checked + .theme-slider:before {
+      transform: translateX(20px);
+    }
+
+    @media (max-width: 768px) {
+      #sidebar {
+        position: fixed;
+        left: 0;
+        top: 40px;
+        bottom: 0;
+        z-index: 90;
+        transform: translateX(-100%);
+        width: 250px;
+      }
+      
+      #sidebar.active {
+        transform: translateX(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="enhancer-header">
+    <h1>增强版 flomo 笔记</h1>
+    <div class="enhancer-buttons">
+      <button id="toggle-sidebar">侧边栏</button>
+      <button id="toggle-header">隐藏顶栏</button>
+      <button id="original-view">原始视图</button>
+    </div>
+  </div>
+  
+  <div id="main-container">
+    <div id="sidebar">
+      <div class="sidebar-section">
+        <h3>搜索笔记</h3>
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="输入关键词...">
+          <button id="search-button">🔍</button>
+        </div>
+        <div id="search-results"></div>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>日期筛选</h3>
+        <div class="date-filter">
+          <select id="year-filter">
+            <option value="">选择年份</option>
+          </select>
+          <select id="month-filter">
+            <option value="">选择月份</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>标签云</h3>
+        <div class="tag-cloud" id="tag-cloud">
+          <!-- 标签将动态添加 -->
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>快捷操作</h3>
+        <div class="action-buttons">
+          <div class="action-button" id="print-notes">
+            <span class="icon">🖨️</span>
+            <span>打印笔记</span>
+          </div>
+          <div class="action-button" id="export-notes">
+            <span class="icon">📤</span>
+            <span>导出笔记</span>
+          </div>
+          <div class="action-button" id="scroll-top">
+            <span class="icon">⬆️</span>
+            <span>回到顶部</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>设置</h3>
+        <div class="settings-section">
+          <label>
+            <input type="checkbox" id="auto-dark-mode"> 
+            跟随系统暗色模式
+          </label>
+          <label>
+            暗色模式
+            <span class="theme-switch">
+              <input type="checkbox" id="dark-mode-toggle-checkbox">
+              <span class="theme-slider"></span>
+            </span>
+          </label>
+          <label>
+            <input type="checkbox" id="highlight-code"> 
+            代码语法高亮
+          </label>
+          <label>
+            <input type="checkbox" id="highlight-links"> 
+            突出显示链接
+          </label>
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>笔记统计</h3>
+        <div class="stats-box">
+          <div class="stats-item">
+            <span class="label">总笔记数</span>
+            <span class="value" id="total-notes">--</span>
+          </div>
+          <div class="stats-item">
+            <span class="label">总字数</span>
+            <span class="value" id="total-words">--</span>
+          </div>
+          <div class="stats-item">
+            <span class="label">总标签数</span>
+            <span class="value" id="total-tags">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="iframe-container">
+      <iframe id="content-frame"></iframe>
+    </div>
+  </div>
+
+  <button class="toggle-sidebar" id="mobile-toggle-sidebar">☰</button>
+
+  <script>
+    // 确定正确的iframe源路径
+    function getCorrectPath() {
+      // 获取当前URL路径
+      const currentPath = window.location.pathname;
+      
+      // 如果是通过/flomo-enhanced访问的
+      if (currentPath === '/flomo-enhanced') {
+        return '/flomo/cubxxw.html';
+      }
+      
+      // 如果是通过/flomo/enhancer.html或其他方式访问的
+      return 'cubxxw.html';
+    }
+    
+    // 设置iframe源
+    document.getElementById('content-frame').src = getCorrectPath();
+    
+    // 一旦iframe加载完成，注入增强脚本
+    document.getElementById('content-frame').addEventListener('load', function() {
+      const frame = document.getElementById('content-frame');
+      const frameDoc = frame.contentDocument || frame.contentWindow.document;
+      
+      // 创建脚本元素
+      const script = frameDoc.createElement('script');
+      
+      // 设置正确的脚本路径
+      if (window.location.pathname === '/flomo-enhanced') {
+        script.src = '/flomo/flomo-enhancer.js';
+      } else {
+        script.src = 'flomo-enhancer.js';
+      }
+      
+      // 添加到iframe的文档中
+      frameDoc.body.appendChild(script);
+      
+      // 开始处理笔记数据
+      setTimeout(processNotes, 1000);
+    });
+    
+    // 切换顶部栏显示/隐藏
+    document.getElementById('toggle-header').addEventListener('click', function() {
+      const header = document.getElementById('enhancer-header');
+      const container = document.getElementById('main-container');
+      
+      if (header.style.display === 'none') {
+        header.style.display = 'flex';
+        container.style.height = 'calc(100% - 40px)';
+      } else {
+        header.style.display = 'none';
+        container.style.height = '100%';
+      }
+    });
+    
+    // 切换侧边栏
+    document.getElementById('toggle-sidebar').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    });
+    
+    // 移动端侧边栏切换
+    document.getElementById('mobile-toggle-sidebar').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('active');
+    });
+    
+    // 原始视图按钮 - 直接跳转到原始文件
+    document.getElementById('original-view').addEventListener('click', function() {
+      // 如果是通过/flomo-enhanced访问的
+      if (window.location.pathname === '/flomo-enhanced') {
+        window.location.href = '/flomo-original';
+      } else {
+        window.location.href = 'cubxxw.html';
+      }
+    });
+    
+    // 回到顶部
+    document.getElementById('scroll-top').addEventListener('click', function() {
+      const frame = document.getElementById('content-frame');
+      const frameWin = frame.contentWindow || frame;
+      frameWin.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // 打印笔记
+    document.getElementById('print-notes').addEventListener('click', function() {
+      const frame = document.getElementById('content-frame');
+      frame.contentWindow.print();
+    });
+    
+    // 导出笔记 - 暂时实现为下载当前页面
+    document.getElementById('export-notes').addEventListener('click', function() {
+      const frame = document.getElementById('content-frame');
+      const frameDoc = frame.contentDocument || frame.contentWindow.document;
+      const html = frameDoc.documentElement.outerHTML;
+      const blob = new Blob([html], {type: 'text/html'});
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'flomo-notes-' + new Date().toISOString().slice(0, 10) + '.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+    
+    // 暗黑模式切换
+    document.getElementById('dark-mode-toggle-checkbox').addEventListener('change', function() {
+      toggleDarkMode(this.checked);
+    });
+    
+    function toggleDarkMode(isDark) {
+      const frame = document.getElementById('content-frame');
+      const frameWin = frame.contentWindow || frame;
+      const frameDoc = frameWin.document;
+      
+      if (isDark) {
+        // 添加暗黑模式样式
+        let style = frameDoc.getElementById('dark-mode-style');
+        if (!style) {
+          style = frameDoc.createElement('style');
+          style.id = 'dark-mode-style';
+          style.textContent = `
+            body { background: #222 !important; color: #eee !important; }
+            .memo { background: #333 !important; box-shadow: 0 2px 10px rgba(0,0,0,0.5) !important; border: 1px solid #444 !important; }
+            .memo .time { color: #aaa !important; }
+            .memo .content { color: #ddd !important; }
+            header .logo { border-bottom: 1px solid #444 !important; }
+            header .top .user .name { color: #eee !important; }
+            header .top .user .date { color: #aaa !important; }
+          `;
+          frameDoc.head.appendChild(style);
+        }
+      } else {
+        // 移除暗黑模式样式
+        const style = frameDoc.getElementById('dark-mode-style');
+        if (style) {
+          style.remove();
+        }
+      }
+    }
+    
+    // 跟随系统暗黑模式
+    document.getElementById('auto-dark-mode').addEventListener('change', function() {
+      if (this.checked) {
+        // 检测系统暗黑模式
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.getElementById('dark-mode-toggle-checkbox').checked = true;
+          toggleDarkMode(true);
+        }
+        
+        // 监听系统暗黑模式变化
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+          document.getElementById('dark-mode-toggle-checkbox').checked = e.matches;
+          toggleDarkMode(e.matches);
+        });
+      }
+    });
+    
+    // 代码高亮功能
+    document.getElementById('highlight-code').addEventListener('change', function() {
+      const frame = document.getElementById('content-frame');
+      const frameDoc = frame.contentDocument || frame.contentWindow.document;
+      
+      if (this.checked) {
+        // 寻找代码块并添加高亮
+        const codeBlocks = Array.from(frameDoc.querySelectorAll('.memo .content p')).filter(p => {
+          return p.textContent.trim().startsWith('```') && p.textContent.trim().endsWith('```');
+        });
+        
+        codeBlocks.forEach(block => {
+          block.style.backgroundColor = '#f0f0f0';
+          block.style.padding = '10px';
+          block.style.borderRadius = '4px';
+          block.style.fontFamily = 'monospace';
+          block.style.overflowX = 'auto';
+        });
+      } else {
+        // 恢复代码块样式
+        const codeBlocks = Array.from(frameDoc.querySelectorAll('.memo .content p')).filter(p => {
+          return p.textContent.trim().startsWith('```') && p.textContent.trim().endsWith('```');
+        });
+        
+        codeBlocks.forEach(block => {
+          block.style.backgroundColor = '';
+          block.style.padding = '';
+          block.style.borderRadius = '';
+          block.style.fontFamily = '';
+          block.style.overflowX = '';
+        });
+      }
+    });
+    
+    // 链接高亮功能
+    document.getElementById('highlight-links').addEventListener('change', function() {
+      const frame = document.getElementById('content-frame');
+      const frameDoc = frame.contentDocument || frame.contentWindow.document;
+      
+      if (this.checked) {
+        // 查找所有链接文本并突出显示
+        const contentElements = frameDoc.querySelectorAll('.memo .content p');
+        contentElements.forEach(element => {
+          const html = element.innerHTML;
+          // 正则表达式匹配URL
+          const urlRegex = /(https?:\/\/[^\s]+)/g;
+          element.innerHTML = html.replace(urlRegex, url => {
+            return `<a href="${url}" target="_blank" style="color: #30cf79; text-decoration: underline;">${url}</a>`;
+          });
+        });
+      } else {
+        // 刷新iframe恢复原样
+        frame.src = frame.src;
+      }
+    });
+    
+    // 处理笔记数据
+    function processNotes() {
+      const frame = document.getElementById('content-frame');
+      const frameDoc = frame.contentDocument || frame.contentWindow.document;
+      
+      // 获取所有笔记
+      const memos = frameDoc.querySelectorAll('.memo');
+      
+      // 统计数据
+      document.getElementById('total-notes').textContent = memos.length;
+      
+      let totalWords = 0;
+      const tags = new Set();
+      const years = new Set();
+      const months = {};
+      
+      // 处理每条笔记
+      memos.forEach(memo => {
+        // 统计字数
+        const content = memo.querySelector('.content').textContent;
+        totalWords += content.replace(/\s+/g, '').length;
+        
+        // 提取标签
+        const tagMatches = content.match(/#[\w\/]+/g);
+        if (tagMatches) {
+          tagMatches.forEach(tag => tags.add(tag.substring(1)));
+        }
+        
+        // 提取日期
+        const dateText = memo.querySelector('.time').textContent;
+        const dateParts = dateText.split(' ')[0].split('-');
+        if (dateParts.length === 3) {
+          const year = dateParts[0];
+          const month = dateParts[1];
+          years.add(year);
+          
+          const yearMonth = `${year}-${month}`;
+          months[yearMonth] = (months[yearMonth] || 0) + 1;
+        }
+      });
+      
+      // 更新统计信息
+      document.getElementById('total-words').textContent = totalWords;
+      document.getElementById('total-tags').textContent = tags.size;
+      
+      // 构建标签云
+      const tagCloud = document.getElementById('tag-cloud');
+      tags.forEach(tag => {
+        const tagElement = document.createElement('div');
+        tagElement.className = 'tag';
+        tagElement.textContent = tag;
+        tagElement.addEventListener('click', () => filterByTag(tag));
+        tagCloud.appendChild(tagElement);
+      });
+      
+      // 构建年份筛选器
+      const yearFilter = document.getElementById('year-filter');
+      const sortedYears = Array.from(years).sort((a, b) => b - a);
+      sortedYears.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year + '年';
+        yearFilter.appendChild(option);
+      });
+      
+      // 年份变化时更新月份筛选器
+      yearFilter.addEventListener('change', updateMonthFilter);
+      
+      // 初始化月份筛选器
+      updateMonthFilter();
+      
+      // 年月筛选器变化时筛选笔记
+      yearFilter.addEventListener('change', filterNotesByDate);
+      document.getElementById('month-filter').addEventListener('change', filterNotesByDate);
+      
+      // 初始化搜索功能
+      document.getElementById('search-button').addEventListener('click', searchNotes);
+      document.getElementById('search-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          searchNotes();
+        }
+      });
+      
+      // 更新月份筛选器函数
+      function updateMonthFilter() {
+        const selectedYear = yearFilter.value;
+        const monthFilter = document.getElementById('month-filter');
+        
+        // 清空现有选项
+        while (monthFilter.options.length > 1) {
+          monthFilter.remove(1);
+        }
+        
+        if (selectedYear) {
+          // 找出选定年份的所有月份
+          const yearMonths = Object.keys(months)
+            .filter(ym => ym.startsWith(selectedYear))
+            .sort()
+            .reverse();
+          
+          yearMonths.forEach(yearMonth => {
+            const month = yearMonth.split('-')[1];
+            const option = document.createElement('option');
+            option.value = month;
+            option.textContent = month + '月';
+            monthFilter.appendChild(option);
+          });
+        }
+      }
+      
+      // 按标签筛选笔记
+      function filterByTag(tag) {
+        memos.forEach(memo => {
+          const content = memo.querySelector('.content').textContent;
+          if (content.includes('#' + tag)) {
+            memo.style.display = 'block';
+          } else {
+            memo.style.display = 'none';
+          }
+        });
+      }
+      
+      // 按日期筛选笔记
+      function filterNotesByDate() {
+        const selectedYear = yearFilter.value;
+        const selectedMonth = document.getElementById('month-filter').value;
+        
+        if (!selectedYear && !selectedMonth) {
+          // 没有选择任何筛选条件，显示所有笔记
+          memos.forEach(memo => memo.style.display = 'block');
+          return;
+        }
+        
+        memos.forEach(memo => {
+          const dateText = memo.querySelector('.time').textContent;
+          const dateParts = dateText.split(' ')[0].split('-');
+          
+          if (dateParts.length === 3) {
+            const year = dateParts[0];
+            const month = dateParts[1];
+            
+            const yearMatch = !selectedYear || year === selectedYear;
+            const monthMatch = !selectedMonth || month === selectedMonth;
+            
+            if (yearMatch && monthMatch) {
+              memo.style.display = 'block';
+            } else {
+              memo.style.display = 'none';
+            }
+          }
+        });
+      }
+      
+      // 搜索笔记
+      function searchNotes() {
+        const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
+        if (!searchTerm) return;
+        
+        const results = [];
+        
+        memos.forEach((memo, index) => {
+          const content = memo.querySelector('.content').textContent.toLowerCase();
+          const dateText = memo.querySelector('.time').textContent;
+          
+          if (content.includes(searchTerm)) {
+            results.push({
+              index,
+              content,
+              date: dateText,
+              element: memo
+            });
+          }
+        });
+        
+        displaySearchResults(results, searchTerm);
+      }
+      
+      // 显示搜索结果
+      function displaySearchResults(results, searchTerm) {
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.innerHTML = '';
+        
+        if (results.length === 0) {
+          resultsContainer.innerHTML = '<div style="padding: 10px; color: #999;">没有找到匹配结果</div>';
+          return;
+        }
+        
+        results.forEach(result => {
+          const resultItem = document.createElement('div');
+          resultItem.className = 'result-item';
+          
+          // 提取内容前后文
+          let content = result.content;
+          const termIndex = content.indexOf(searchTerm);
+          const snippetStart = Math.max(0, termIndex - 15);
+          const snippetEnd = Math.min(content.length, termIndex + searchTerm.length + 15);
+          content = (snippetStart > 0 ? '...' : '') + 
+                   content.substring(snippetStart, snippetEnd) + 
+                   (snippetEnd < content.length ? '...' : '');
+          
+          // 高亮关键词
+          content = content.replace(new RegExp(searchTerm, 'gi'), match => `<span class="highlight">${match}</span>`);
+          
+          resultItem.innerHTML = `
+            <div class="date">${result.date}</div>
+            <div>${content}</div>
+          `;
+          
+          // 点击结果跳转到对应笔记
+          resultItem.addEventListener('click', () => {
+            // 显示所有笔记
+            memos.forEach(memo => memo.style.display = 'block');
+            
+            // 滚动到匹配的笔记
+            result.element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // 突出显示匹配的笔记
+            result.element.style.boxShadow = '0 0 0 3px #30cf79';
+            setTimeout(() => {
+              result.element.style.boxShadow = '';
+            }, 3000);
+          });
+          
+          resultsContainer.appendChild(resultItem);
+        });
+      }
+    }
+  </script>
+</body>
+</html> 

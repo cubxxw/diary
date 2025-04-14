@@ -1,189 +1,178 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diary - AI Enhanced Notes</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Diary - AI 增强笔记</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f8f9fa;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: #f9f9f9;
       color: #333;
     }
     .hero {
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      background-color: #30cf79;
       color: white;
-      padding: 4rem 0;
-      margin-bottom: 2rem;
+      padding: 80px 0;
+      margin-bottom: 40px;
+    }
+    .hero h1 {
+      font-weight: bold;
+      font-size: 3rem;
     }
     .card {
       border: none;
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-      margin-bottom: 1.5rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      height: 100%;
     }
     .card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
-    .card-img-top {
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-      height: 180px;
-      object-fit: cover;
+    .card-title {
+      color: #30cf79;
+      font-weight: bold;
     }
     .btn-primary {
-      background-color: #6a11cb;
-      border-color: #6a11cb;
+      background-color: #30cf79;
+      border-color: #30cf79;
     }
     .btn-primary:hover {
-      background-color: #5a0cb9;
-      border-color: #5a0cb9;
+      background-color: #26b467;
+      border-color: #26b467;
     }
     .btn-outline-primary {
-      color: #6a11cb;
-      border-color: #6a11cb;
+      color: #30cf79;
+      border-color: #30cf79;
     }
     .btn-outline-primary:hover {
-      background-color: #6a11cb;
-      color: white;
+      background-color: #30cf79;
+      border-color: #30cf79;
     }
-    .social-links a {
-      margin: 0 10px;
-      color: #6a11cb;
-      font-size: 1.5rem;
-      transition: color 0.3s ease;
-    }
-    .social-links a:hover {
-      color: #5a0cb9;
+    .feature-icon {
+      font-size: 2.5rem;
+      color: #30cf79;
+      margin-bottom: 15px;
     }
     footer {
-      background-color: #343a40;
+      background-color: #333;
       color: white;
-      padding: 2rem 0;
-      margin-top: 3rem;
+      padding: 30px 0;
+      margin-top: 60px;
+    }
+    footer a {
+      color: #aaa;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: white;
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="hero text-center">
     <div class="container">
-      <a class="navbar-brand" href="/">Diary</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/flomo/cubxxw.html">Notes</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="https://github.com/cubxxw/diary" target="_blank">GitHub</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="https://nsddd.top" target="_blank">Blog</a>
-          </li>
-        </ul>
+      <h1>Diary - AI 增强笔记</h1>
+      <p class="lead">优化您的 flomo 笔记体验，提供更强大的功能和更美观的界面</p>
+      <div class="mt-4">
+        <a href="/flomo-enhanced" class="btn btn-light btn-lg me-2">使用增强版</a>
+        <a href="/flomo-original" class="btn btn-outline-light btn-lg">查看原始版</a>
       </div>
     </div>
-  </nav>
+  </div>
 
-  <!-- Hero Section -->
-  <section class="hero text-center">
-    <div class="container">
-      <h1 class="display-4 fw-bold mb-3">AI Enhanced Notes</h1>
-      <p class="lead mb-4">A modern approach to capturing and organizing your thoughts with AI capabilities</p>
-      <div class="d-flex justify-content-center gap-3">
-        <a href="/flomo/cubxxw.html" class="btn btn-light btn-lg px-4">View Notes</a>
-        <a href="https://github.com/cubxxw/diary" target="_blank" class="btn btn-outline-light btn-lg px-4">GitHub</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Content -->
   <div class="container">
     <div class="row mb-5">
-      <div class="col-md-6">
-        <h2 class="mb-4">About This Project</h2>
-        <p class="lead">This project enhances flomo's exported notes with AI capabilities and a modern interface.</p>
-        <p>Flomo is a note-taking app that helps you capture thoughts quickly. This project takes those exported notes and adds additional features and optimizations.</p>
-        <div class="mt-4">
-          <a href="/flomo/cubxxw.html" class="btn btn-primary me-2">Explore Notes</a>
-          <a href="https://nsddd.top" target="_blank" class="btn btn-outline-primary">Visit Blog</a>
+      <div class="col-md-8 mx-auto text-center">
+        <h2>为何选择增强版?</h2>
+        <p class="lead text-muted">在不修改原始HTML的基础上提供更多实用功能</p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card p-4 text-center">
+          <div class="feature-icon">🔍</div>
+          <h3 class="card-title">强大搜索</h3>
+          <p class="card-text">快速搜索笔记内容，支持高亮显示搜索结果，提高查找效率。</p>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card h-100">
-          <div class="card-body">
-            <h3 class="card-title">Features</h3>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> Modern UI with responsive design</li>
-              <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> AI-enhanced note organization</li>
-              <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> Easy navigation and filtering</li>
-              <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> Optimized for all devices</li>
-              <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> Customizable port configuration</li>
-            </ul>
-          </div>
+      <div class="col-md-4">
+        <div class="card p-4 text-center">
+          <div class="feature-icon">🌙</div>
+          <h3 class="card-title">暗黑模式</h3>
+          <p class="card-text">一键切换明暗主题，夜间阅读更护眼，提供舒适的浏览体验。</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-4 text-center">
+          <div class="feature-icon">🏷️</div>
+          <h3 class="card-title">标签云</h3>
+          <p class="card-text">自动收集笔记中的标签，点击即可筛选相关内容，分类更清晰。</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-4 text-center">
+          <div class="feature-icon">📱</div>
+          <h3 class="card-title">响应式设计</h3>
+          <p class="card-text">自适应各种屏幕尺寸，手机、平板、电脑均可完美浏览。</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-4 text-center">
+          <div class="feature-icon">🚀</div>
+          <h3 class="card-title">性能优化</h3>
+          <p class="card-text">优化代码结构，快速加载，流畅浏览，提升使用体验。</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-4 text-center">
+          <div class="feature-icon">⚙️</div>
+          <h3 class="card-title">便捷功能</h3>
+          <p class="card-text">回到顶部按钮，一键切换原始视图，使用更加便捷。</p>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1517842645767-c639042777db?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Notes">
-          <div class="card-body">
-            <h5 class="card-title">Flomo Notes</h5>
-            <p class="card-text">Access your exported flomo notes with enhanced UI and filtering capabilities.</p>
-            <a href="/flomo/cubxxw.html" class="btn btn-primary">View Notes</a>
-          </div>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <div class="card p-4">
+          <h3 class="card-title">使用方法</h3>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item bg-transparent">1. 点击上方的"使用增强版"按钮</li>
+            <li class="list-group-item bg-transparent">2. 使用搜索框快速查找内容</li>
+            <li class="list-group-item bg-transparent">3. 点击右上角的月亮图标切换暗黑模式</li>
+            <li class="list-group-item bg-transparent">4. 通过标签云筛选内容</li>
+            <li class="list-group-item bg-transparent">5. 随时可通过按钮切换回原始视图</li>
+          </ul>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="GitHub">
-          <div class="card-body">
-            <h5 class="card-title">GitHub Repository</h5>
-            <p class="card-text">Check out the source code, contribute, or fork the project on GitHub.</p>
-            <a href="https://github.com/cubxxw/diary" target="_blank" class="btn btn-primary">Visit GitHub</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Blog">
-          <div class="card-body">
-            <h5 class="card-title">Personal Blog</h5>
-            <p class="card-text">Visit the author's personal blog for more content and projects.</p>
-            <a href="https://nsddd.top" target="_blank" class="btn btn-primary">Visit Blog</a>
-          </div>
+      <div class="col-md-6">
+        <div class="card p-4">
+          <h3 class="card-title">技术实现</h3>
+          <p>本项目通过纯JavaScript实现，不修改原始HTML文件的前提下添加功能：</p>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item bg-transparent">采用iframe嵌套原始页面</li>
+            <li class="list-group-item bg-transparent">通过DOM操作动态添加功能</li>
+            <li class="list-group-item bg-transparent">使用内联样式确保兼容性</li>
+            <li class="list-group-item bg-transparent">支持所有现代浏览器</li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="text-center">
     <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Connect</h4>
-          <div class="social-links my-3">
-            <a href="https://github.com/cubxxw" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://nsddd.top" target="_blank"><i class="fas fa-blog"></i></a>
-          </div>
-          <p class="mb-0">© 2023 cubxxw. All rights reserved.</p>
-        </div>
+      <p>&copy; 2025 cubxxw. 所有权利保留。</p>
+      <div>
+        <a href="https://github.com/cubxxw/diary" target="_blank" class="me-3">GitHub</a>
+        <a href="https://nsddd.top" target="_blank">个人博客</a>
       </div>
     </div>
   </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
