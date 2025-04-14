@@ -37,6 +37,18 @@ start:
 	@echo "===========> Starting production server"
 	@npm run start
 
+## 构建静态网站
+.PHONY: build
+build:
+	@echo "===========> Building static site"
+	@npm run build
+
+## 启动构建后的静态网站
+.PHONY: serve-build
+serve-build:
+	@echo "===========> Serving built static site"
+	@npm run serve-build
+
 ## 后台启动（使用 pm2）
 .PHONY: start-daemon
 start-daemon:

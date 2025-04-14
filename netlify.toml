@@ -4,3 +4,18 @@
 
 [functions]
   directory = "netlify/functions"
+
+[[redirects]]
+  from = "/flomo-enhanced"
+  to = "/flomo-enhanced/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/flomo-original"
+  to = "/flomo-original/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
