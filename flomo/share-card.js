@@ -400,7 +400,7 @@
     cardHeader.style.marginBottom = '15px';
     
     const cardLogo = document.createElement('div');
-    cardLogo.innerHTML = 'flomo 浮墨笔记';
+    cardLogo.innerHTML = 'Xinwei Xiong diary';
     cardLogo.style.fontWeight = 'bold';
     
     const cardDate = document.createElement('div');

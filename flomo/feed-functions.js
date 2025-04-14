@@ -445,7 +445,7 @@ const feedFunctions = {
       header.style.marginBottom = '15px';
       
       const logo = document.createElement('div');
-      logo.innerHTML = 'flomo 浮墨笔记';
+      logo.innerHTML = 'Xinwei Xiong diary';
       logo.style.fontWeight = 'bold';
       logo.style.color = '#333';
       
