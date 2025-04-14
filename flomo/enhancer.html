@@ -349,8 +349,12 @@
       </div>
       
       <div class="sidebar-section">
-        <h3>快捷操作</h3>
+        <h3>快捷功能</h3>
         <div class="action-buttons">
+          <div class="action-button" id="feed-mode-sidebar">
+            <div class="icon">📖</div>
+            <span>Feed沉浸阅读模式</span>
+          </div>
           <div class="action-button" id="print-notes">
             <span class="icon">🖨️</span>
             <span>打印笔记</span>
@@ -381,11 +385,11 @@
             </span>
           </label>
           <label>
-            <input type="checkbox" id="highlight-code"> 
+            <input type="checkbox" id="highlight-code" checked> 
             代码语法高亮
           </label>
           <label>
-            <input type="checkbox" id="highlight-links"> 
+            <input type="checkbox" id="highlight-links" checked> 
             突出显示链接
           </label>
         </div>
@@ -455,7 +459,63 @@
       
       // 开始处理笔记数据
       setTimeout(processNotes, 1000);
+      
+      // 默认开启代码高亮和链接突出显示
+      setTimeout(function() {
+        // 应用代码高亮
+        applyCodeHighlight();
+        
+        // 应用链接突出显示
+        applyLinkHighlight();
+      }, 1500);
     });
+    
+    // 应用代码高亮
+    function applyCodeHighlight() {
+      const frame = document.getElementById('content-frame');
+      const frameDoc = frame.contentDocument || frame.contentWindow.document;
+      
+      // 寻找代码块并添加高亮
+      const codeBlocks = Array.from(frameDoc.querySelectorAll('.memo .content p')).filter(p => {
+        return p.textContent.trim().startsWith('```') && p.textContent.trim().endsWith('```');
+      });
+      
+      codeBlocks.forEach(block => {
+        block.style.backgroundColor = '#f0f0f0';
+        block.style.padding = '10px';
+        block.style.borderRadius = '4px';
+        block.style.fontFamily = 'monospace';
+        block.style.overflowX = 'auto';
+      });
+      
+      console.log('代码高亮已默认应用，已处理', codeBlocks.length, '个代码块');
+    }
+    
+    // 应用链接突出显示
+    function applyLinkHighlight() {
+      const frame = document.getElementById('content-frame');
+      const frameDoc = frame.contentDocument || frame.contentWindow.document;
+      
+      // 查找所有链接文本并突出显示
+      const contentElements = frameDoc.querySelectorAll('.memo .content p');
+      let linkCount = 0;
+      
+      contentElements.forEach(element => {
+        const html = element.innerHTML;
+        // 正则表达式匹配URL
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const newHtml = html.replace(urlRegex, url => {
+          linkCount++;
+          return `<a href="${url}" target="_blank" style="color: #30cf79; text-decoration: underline;">${url}</a>`;
+        });
+        
+        if (html !== newHtml) {
+          element.innerHTML = newHtml;
+        }
+      });
+      
+      console.log('链接突出显示已默认应用，已处理', linkCount, '个链接');
+    }
     
     // 切换顶部栏显示/隐藏
     document.getElementById('toggle-header').addEventListener('click', function() {
@@ -579,24 +639,14 @@
     
     // 代码高亮功能
     document.getElementById('highlight-code').addEventListener('change', function() {
-      const frame = document.getElementById('content-frame');
-      const frameDoc = frame.contentDocument || frame.contentWindow.document;
-      
       if (this.checked) {
-        // 寻找代码块并添加高亮
-        const codeBlocks = Array.from(frameDoc.querySelectorAll('.memo .content p')).filter(p => {
-          return p.textContent.trim().startsWith('```') && p.textContent.trim().endsWith('```');
-        });
-        
-        codeBlocks.forEach(block => {
-          block.style.backgroundColor = '#f0f0f0';
-          block.style.padding = '10px';
-          block.style.borderRadius = '4px';
-          block.style.fontFamily = 'monospace';
-          block.style.overflowX = 'auto';
-        });
+        // 应用代码高亮
+        applyCodeHighlight();
       } else {
         // 恢复代码块样式
+        const frame = document.getElementById('content-frame');
+        const frameDoc = frame.contentDocument || frame.contentWindow.document;
+        
         const codeBlocks = Array.from(frameDoc.querySelectorAll('.memo .content p')).filter(p => {
           return p.textContent.trim().startsWith('```') && p.textContent.trim().endsWith('```');
         });
@@ -608,28 +658,133 @@
           block.style.fontFamily = '';
           block.style.overflowX = '';
         });
+        
+        console.log('代码高亮已禁用');
       }
     });
     
     // 链接高亮功能
     document.getElementById('highlight-links').addEventListener('change', function() {
-      const frame = document.getElementById('content-frame');
-      const frameDoc = frame.contentDocument || frame.contentWindow.document;
-      
       if (this.checked) {
-        // 查找所有链接文本并突出显示
-        const contentElements = frameDoc.querySelectorAll('.memo .content p');
-        contentElements.forEach(element => {
-          const html = element.innerHTML;
-          // 正则表达式匹配URL
-          const urlRegex = /(https?:\/\/[^\s]+)/g;
-          element.innerHTML = html.replace(urlRegex, url => {
-            return `<a href="${url}" target="_blank" style="color: #30cf79; text-decoration: underline;">${url}</a>`;
-          });
-        });
+        // 应用链接突出显示
+        applyLinkHighlight();
       } else {
         // 刷新iframe恢复原样
+        const frame = document.getElementById('content-frame');
         frame.src = frame.src;
+        
+        // 需要重新打开代码高亮（如果开启的话）
+        setTimeout(() => {
+          if (document.getElementById('highlight-code').checked) {
+            applyCodeHighlight();
+          }
+        }, 1500);
+        
+        console.log('链接突出显示已禁用');
+      }
+    });
+    
+    // 监听Feed模式按钮
+    document.getElementById('feed-mode-sidebar').addEventListener('click', function() {
+      const contentFrame = document.getElementById('content-frame');
+      if (contentFrame && contentFrame.contentWindow) {
+        console.log("点击Feed模式按钮，准备注入Feed模式");
+        
+        try {
+          // 获取iframe文档
+          const frameDoc = contentFrame.contentDocument || contentFrame.contentWindow.document;
+          
+          // 显示加载中提示
+          const toast = document.createElement('div');
+          toast.style.position = 'fixed';
+          toast.style.bottom = '30px';
+          toast.style.left = '50%';
+          toast.style.transform = 'translateX(-50%)';
+          toast.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+          toast.style.color = 'white';
+          toast.style.padding = '10px 20px';
+          toast.style.borderRadius = '4px';
+          toast.style.fontSize = '14px';
+          toast.style.zIndex = '10001';
+          toast.textContent = "正在加载Feed模式...";
+          document.body.appendChild(toast);
+          
+          // 3秒后移除提示
+          setTimeout(() => {
+            document.body.removeChild(toast);
+          }, 3000);
+          
+          // 检查iframe是否已加载
+          if (!frameDoc || !frameDoc.body) {
+            console.error("iframe尚未完全加载");
+            alert("页面尚未完全加载，请稍后再试");
+            return;
+          }
+          
+          // 获取所有笔记元素
+          const memos = frameDoc.querySelectorAll('.memo');
+          if (memos.length === 0) {
+            console.error("未在iframe中找到笔记元素");
+            alert("无法找到笔记内容，请刷新页面后重试");
+            return;
+          }
+          
+          // 动态加载所需脚本
+          const baseUrl = window.location.pathname.includes('/flomo-enhanced') ? 
+                        '/flomo/' : './';
+          
+          // 加载Feed模式的样式和模板
+          [
+            'feed-style.js',
+            'feed-template.js', 
+            'feed-functions.js'
+          ].forEach(file => {
+            const existingScript = frameDoc.querySelector(`script[src="${baseUrl}${file}"]`);
+            if (!existingScript) {
+              const script = frameDoc.createElement('script');
+              script.src = `${baseUrl}${file}`;
+              script.onload = () => console.log(`${file} 已加载`);
+              script.onerror = () => console.error(`${file} 加载失败`);
+              frameDoc.head.appendChild(script);
+            }
+          });
+          
+          // 注入激活脚本
+          setTimeout(() => {
+            const activationScript = frameDoc.createElement('script');
+            activationScript.textContent = `
+              (function() {
+                console.log("正在初始化Feed模式");
+                
+                // 等待所有依赖加载完成
+                const checkDependencies = setInterval(() => {
+                  if (window.feedStylesContent && window.feedTemplates && window.feedFunctions) {
+                    clearInterval(checkDependencies);
+                    
+                    // 获取笔记
+                    const memos = document.querySelectorAll('.memo');
+                    console.log("找到笔记数量:", memos.length);
+                    
+                    // 初始化并打开Feed模式
+                    window.feedFunctions.init(memos);
+                    window.feedFunctions.open();
+                  }
+                }, 300);
+                
+                // 设置超时
+                setTimeout(() => {
+                  clearInterval(checkDependencies);
+                  console.error("依赖加载超时");
+                }, 10000);
+              })();
+            `;
+            frameDoc.body.appendChild(activationScript);
+          }, 500);
+          
+        } catch (error) {
+          console.error("激活Feed模式时出错:", error);
+          alert("激活Feed模式失败: " + error.message);
+        }
       }
     });
     
