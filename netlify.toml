@@ -19,3 +19,8 @@
   from = "/"
   to = "/index.html"
   status = 200
+
+[[redirects]]
+  from = "/flomo/*"
+  to = "/flomo/:splat"
+  status = 200

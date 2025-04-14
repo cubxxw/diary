@@ -306,7 +306,7 @@
     }
   </style>
   <!-- 添加分享功能的脚本 -->
-  <script src="load-share.js"></script>
+  <script src="/flomo/load-share.js"></script>
 </head>
 <body>
   <div id="enhancer-header">
@@ -427,13 +427,8 @@
       // 获取当前URL路径
       const currentPath = window.location.pathname;
       
-      // 如果是通过/flomo-enhanced访问的
-      if (currentPath === '/flomo-enhanced') {
-        return '/flomo/cubxxw.html';
-      }
-      
-      // 如果是通过/flomo/enhancer.html或其他方式访问的
-      return 'cubxxw.html';
+      // 始终使用绝对路径
+      return '/flomo/cubxxw.html';
     }
     
     // 设置iframe源
@@ -447,12 +442,8 @@
       // 创建脚本元素
       const script = frameDoc.createElement('script');
       
-      // 设置正确的脚本路径
-      if (window.location.pathname === '/flomo-enhanced') {
-        script.src = '/flomo/flomo-enhancer.js';
-      } else {
-        script.src = 'flomo-enhancer.js';
-      }
+      // 设置正确的脚本路径 - 始终使用绝对路径
+      script.src = '/flomo/flomo-enhancer.js';
       
       // 添加到iframe的文档中
       frameDoc.body.appendChild(script);

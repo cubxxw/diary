@@ -19,29 +19,29 @@
     };
     
     // 加载分享卡片功能
-    loadScript('flomo/share-card.js', function() {
+    loadScript('/flomo/share-card.js', function() {
       console.log("分享卡片功能已加载");
       window.flomoEnhanced.loaded.shareCard = true;
     });
     
     // 加载Feed模式功能
-    loadScript('flomo/feed-main.js', function() {
+    loadScript('/flomo/feed-main.js', function() {
       console.log("Feed模式主文件已加载");
       window.flomoEnhanced.loaded.feedMode = true;
       
       // 预加载Feed模式依赖文件
       setTimeout(() => {
-        loadScript('flomo/feed-style.js', function() {
+        loadScript('/flomo/feed-style.js', function() {
           console.log("Feed样式文件已预加载");
           window.flomoEnhanced.loaded.feedStyle = true;
         });
         
-        loadScript('flomo/feed-template.js', function() {
+        loadScript('/flomo/feed-template.js', function() {
           console.log("Feed模板文件已预加载");
           window.flomoEnhanced.loaded.feedTemplate = true;
         });
         
-        loadScript('flomo/feed-functions.js', function() {
+        loadScript('/flomo/feed-functions.js', function() {
           console.log("Feed功能文件已预加载");
           window.flomoEnhanced.loaded.feedFunctions = true;
         });

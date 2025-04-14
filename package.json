@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "mkdir -p _site && cp -r public/* _site/ && cp -r flomo _site/ && mkdir -p _site/flomo-enhanced && cp flomo/enhancer.html _site/flomo-enhanced/index.html && mkdir -p _site/flomo-original && cp flomo/cubxxw.html _site/flomo-original/index.html",
+    "build": "mkdir -p _site && cp -r public/* _site/ && cp -r flomo _site/ && mkdir -p _site/flomo-enhanced && cp flomo/enhancer.html _site/flomo-enhanced/index.html && mkdir -p _site/flomo-original && cp flomo/cubxxw.html _site/flomo-original/index.html && echo 'Build completed successfully'",
     "serve-build": "npx serve _site -l 3001"
   },
   "repository": {
