@@ -12,11 +12,18 @@ document.addEventListener('DOMContentLoaded', function() {
 // 处理内容中的标签
 function processContentTags() {
     const memoContents = document.querySelectorAll('.memo .content');
+    // Processing tags for memo contents
     
-    memoContents.forEach(content => {
-        // 查找并替换 #标签 格式的文本
+    memoContents.forEach((content, index) => {
+        // 获取原始HTML
         const html = content.innerHTML;
-        const processedHtml = html.replace(/#(\w+)/g, '<span class="tag-highlight" data-tag="$1">#$1</span>');
+        // Processing memo tags
+        
+        // 匹配所有#开头的标签，包括中文、字母、数字、斜杠、连字符等字符
+        // 避免匹配部分单词，确保标签是独立的
+        const processedHtml = html.replace(/#([^\s,.;!?'"()<>[\]{}#\n]+)(?=\s|<|$|#)/g, 
+            '<span class="tag-highlight" data-tag="$1">#$1</span>');
+        
         content.innerHTML = processedHtml;
     });
 }
@@ -86,8 +93,8 @@ function addTagClickEvents() {
 
 // 根据标签筛选内容
 function filterByTag(tagName) {
+    // Starting tag filtering
     const memos = document.querySelectorAll('.memo');
-    const activeTag = `data-tag="${tagName}"`;
     
     // 显示筛选状态
     const filterStatus = document.createElement('div');
@@ -118,12 +125,34 @@ function filterByTag(tagName) {
         filterStatus.remove();
     });
     
-    // 筛选备忘录
+    // 筛选备忘录 - 使用更精确的文本匹配方式
+    let foundMemos = 0;
     memos.forEach(memo => {
-        if (memo.innerHTML.includes(activeTag)) {
+        // 获取完整文本内容
+        const contentText = memo.querySelector('.content').textContent;
+        
+        // 检查完整文本是否包含标签
+        // 确保正确匹配完整标签
+        if (contentText.includes('#' + tagName) && 
+            (contentText.includes('#' + tagName + ' ') || 
+             contentText.includes('#' + tagName + '\n') || 
+             contentText.endsWith('#' + tagName))) {
             memo.style.display = 'block';
+            foundMemos++;
+            // Found matching memo
         } else {
             memo.style.display = 'none';
         }
     });
+    
+    // Filtering operation completed
+    
+    // 如果没有找到匹配的备忘录，更新筛选状态
+    if (foundMemos === 0) {
+        filterStatus.querySelector('.filter-info').innerHTML = `
+            <span>没有找到标签: </span>
+            <span class="tag-highlight">#${tagName}</span>
+            <button class="clear-filter"><i class="fas fa-times"></i> 清除筛选</button>
+        `;
+    }
 }

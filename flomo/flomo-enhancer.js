@@ -1,5 +1,31 @@
 // flomo 增强脚本 - 在不修改原始 HTML 的情况下添加功能
 
+// DOM element cache for better performance
+const domCache = {
+  header: null,
+  memosContainer: null,
+  memos: null,
+  searchInput: null,
+  
+  get(selector, refresh = false) {
+    const cacheKey = selector.replace(/[^a-zA-Z0-9]/g, '_');
+    if (!refresh && this[cacheKey]) {
+      return this[cacheKey];
+    }
+    this[cacheKey] = document.querySelector(selector);
+    return this[cacheKey];
+  },
+  
+  getAll(selector, refresh = false) {
+    const cacheKey = selector.replace(/[^a-zA-Z0-9]/g, '_') + '_all';
+    if (!refresh && this[cacheKey]) {
+      return this[cacheKey];
+    }
+    this[cacheKey] = document.querySelectorAll(selector);
+    return this[cacheKey];
+  }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
   // 创建搜索框
   createSearchBar();
@@ -10,50 +36,44 @@ document.addEventListener('DOMContentLoaded', function() {
   // 添加排版优化
   enhanceLayout();
   
-  // 添加标签云
-  createTagCloud();
-  
-  // 添加回到顶部按钮
-  createBackToTopButton();
+  // 确保DOM完全加载后再处理标签
+  setTimeout(() => {
+    // 添加标签云
+    createTagCloud();
+    
+    // 添加回到顶部按钮
+    createBackToTopButton();
+    
+    console.log("增强功能已加载完成");
+  }, 500);
 });
 
 // 创建搜索框功能
 function createSearchBar() {
-  const header = document.querySelector('header .top');
+  const header = domCache.get('header .top');
   if (!header) return;
   
   const searchContainer = document.createElement('div');
   searchContainer.className = 'search-container';
-  searchContainer.style.marginBottom = '15px';
-  searchContainer.style.display = 'flex';
-  searchContainer.style.width = '100%';
-  searchContainer.style.padding = '10px 0';
   
   const searchInput = document.createElement('input');
   searchInput.id = 'memo-search';
   searchInput.type = 'text';
   searchInput.placeholder = '搜索记录...';
-  searchInput.style.padding = '8px 12px';
-  searchInput.style.border = '1px solid #efefef';
-  searchInput.style.borderRadius = '3px';
-  searchInput.style.flex = '1';
-  searchInput.style.marginRight = '10px';
-  searchInput.style.fontSize = '14px';
+  searchInput.className = 'search-input';
   
   const searchButton = document.createElement('button');
   searchButton.textContent = '搜索';
-  searchButton.style.padding = '8px 15px';
-  searchButton.style.background = '#30cf79';
-  searchButton.style.border = 'none';
-  searchButton.style.borderRadius = '3px';
-  searchButton.style.color = '#fff';
-  searchButton.style.cursor = 'pointer';
+  searchButton.className = 'search-button';
   
   searchContainer.appendChild(searchInput);
   searchContainer.appendChild(searchButton);
   
   // 在 .top 元素后插入搜索框
   header.parentNode.insertBefore(searchContainer, header.nextSibling);
+  
+  // Cache search input for later use
+  domCache.searchInput = searchInput;
   
   // 添加搜索功能
   searchButton.addEventListener('click', performSearch);
@@ -66,10 +86,10 @@ function createSearchBar() {
 
 // 执行搜索
 function performSearch() {
-  const searchTerm = document.getElementById('memo-search').value.toLowerCase();
+  const searchTerm = (domCache.searchInput || document.getElementById('memo-search')).value.toLowerCase();
   if (!searchTerm) return;
   
-  const memos = document.querySelectorAll('.memo');
+  const memos = domCache.getAll('.memo', true); // refresh memo cache
   let found = false;
   
   memos.forEach(memo => {
@@ -117,31 +137,13 @@ function showSearchStatus(found, term) {
   
   const status = document.createElement('div');
   status.id = 'search-status';
-  status.style.padding = '10px';
-  status.style.margin = '10px 0';
-  status.style.borderRadius = '3px';
-  status.style.fontSize = '14px';
-  status.style.textAlign = 'center';
-  
-  if (found) {
-    status.textContent = `已找到包含 "${term}" 的记录`;
-    status.style.backgroundColor = '#e6f7ee';
-    status.style.color = '#30cf79';
-  } else {
-    status.textContent = `没有找到包含 "${term}" 的记录`;
-    status.style.backgroundColor = '#fff0f0';
-    status.style.color = '#ff6b6b';
-  }
+  status.className = `search-status ${found ? 'success' : 'error'}`;
+  status.textContent = found ? `已找到包含 "${term}" 的记录` : `没有找到包含 "${term}" 的记录`;
   
   // 添加重置按钮
   const resetButton = document.createElement('button');
   resetButton.textContent = '重置搜索';
-  resetButton.style.marginLeft = '10px';
-  resetButton.style.padding = '3px 8px';
-  resetButton.style.border = '1px solid #ccc';
-  resetButton.style.borderRadius = '3px';
-  resetButton.style.background = '#f0f0f0';
-  resetButton.style.cursor = 'pointer';
+  resetButton.className = 'reset-button';
   
   resetButton.addEventListener('click', function() {
     document.getElementById('memo-search').value = '';
@@ -171,12 +173,7 @@ function createDarkModeToggle() {
   toggleButton.id = 'dark-mode-toggle';
   toggleButton.textContent = '🌙';
   toggleButton.title = '切换暗黑模式';
-  toggleButton.style.marginLeft = '10px';
-  toggleButton.style.padding = '9px 12px';
-  toggleButton.style.background = '#efefef';
-  toggleButton.style.borderRadius = '3px';
-  toggleButton.style.border = 'none';
-  toggleButton.style.cursor = 'pointer';
+  toggleButton.className = 'dark-mode-toggle';
   
   header.appendChild(toggleButton);
   
@@ -312,52 +309,66 @@ function enhanceLayout() {
 
 // 创建标签云
 function createTagCloud() {
+  // Tag cloud generation started
+  
   // 收集所有标签
   const tags = [];
-  document.querySelectorAll('.memo .content p').forEach(p => {
-    const text = p.textContent;
-    if (text.startsWith('#')) {
-      const tagName = text.trim().substring(1);
-      if (tagName && !tags.includes(tagName)) {
-        tags.push(tagName);
-      }
+  
+  // 直接获取所有memo内容
+  const memoContents = document.querySelectorAll('.memo .content');
+  // Found memo contents
+  
+  // 遍历所有笔记内容
+  memoContents.forEach((content, index) => {
+    // 获取所有段落
+    const paragraphs = content.querySelectorAll('p');
+    // 获取完整的文本内容
+    const fullText = content.textContent;
+    
+    // Processing memo content
+    
+    // 使用更宽松的正则表达式匹配标签
+    // 匹配#后面直到空白字符或行尾的所有内容
+    const tagMatches = fullText.match(/#([^\s#]+)/g);
+    
+    if (tagMatches) {
+      // Tags found in content
+      
+      tagMatches.forEach(tag => {
+        const tagName = tag.substring(1); // 去除#符号
+        if (tagName && !tags.includes(tagName)) {
+          tags.push(tagName);
+          // Adding unique tag
+        }
+      });
     }
   });
   
-  if (tags.length === 0) return;
+  // Total unique tags collected
+  
+  if (tags.length === 0) {
+    // No tags found, skipping tag cloud creation
+    return;
+  }
   
   // 创建标签云容器
   const tagCloudContainer = document.createElement('div');
   tagCloudContainer.className = 'tag-cloud';
-  tagCloudContainer.style.margin = '20px 0';
-  tagCloudContainer.style.padding = '15px';
-  tagCloudContainer.style.background = '#fff';
-  tagCloudContainer.style.borderRadius = '6px';
-  tagCloudContainer.style.border = '1px solid #f0f0f0';
   
   const title = document.createElement('h3');
   title.textContent = '标签云';
-  title.style.marginBottom = '10px';
-  title.style.fontSize = '16px';
-  title.style.color = '#454545';
   
   tagCloudContainer.appendChild(title);
   
   // 创建标签元素
   const tagElements = document.createElement('div');
-  tagElements.style.display = 'flex';
-  tagElements.style.flexWrap = 'wrap';
-  tagElements.style.gap = '8px';
+  tagElements.className = 'tag-cloud-container';
   
   tags.forEach(tag => {
     const tagElement = document.createElement('span');
     tagElement.textContent = tag;
-    tagElement.style.padding = '5px 10px';
-    tagElement.style.background = '#f5f5f5';
-    tagElement.style.borderRadius = '15px';
-    tagElement.style.fontSize = '12px';
-    tagElement.style.color = '#30cf79';
-    tagElement.style.cursor = 'pointer';
+    tagElement.setAttribute('data-tag', tag);
+    tagElement.className = 'tag-cloud-item';
     
     tagElement.addEventListener('click', function() {
       filterByTag(tag);
@@ -370,23 +381,39 @@ function createTagCloud() {
   
   // 添加到页面
   const memosContainer = document.querySelector('.memos');
-  memosContainer.insertBefore(tagCloudContainer, memosContainer.firstChild);
+  if (memosContainer) {
+    memosContainer.insertBefore(tagCloudContainer, memosContainer.firstChild);
+    // Tag cloud added to page
+  } else {
+    // Error: .memos container not found
+  }
 }
 
 // 按标签筛选
 function filterByTag(tagName) {
+  // Filtering by tag
   const memos = document.querySelectorAll('.memo');
   let found = false;
   
   memos.forEach(memo => {
-    const content = memo.querySelector('.content').textContent;
-    if (content.includes('#' + tagName)) {
+    // 获取完整文本内容
+    const contentText = memo.querySelector('.content').textContent;
+    
+    // 检查完整文本是否包含标签（更简单可靠的方法）
+    // 确保匹配完整标签而不是部分文本
+    if (contentText.includes('#' + tagName) && 
+        (contentText.includes('#' + tagName + ' ') || 
+         contentText.includes('#' + tagName + '\n') || 
+         contentText.endsWith('#' + tagName))) {
       memo.style.display = 'block';
       found = true;
+      // Found matching memo
     } else {
       memo.style.display = 'none';
     }
   });
+  
+  // Filter operation completed
   
   // 显示筛选结果状态
   showFilterStatus(found, tagName);
@@ -402,31 +429,13 @@ function showFilterStatus(found, tagName) {
   
   const status = document.createElement('div');
   status.id = 'filter-status';
-  status.style.padding = '10px';
-  status.style.margin = '10px 0';
-  status.style.borderRadius = '3px';
-  status.style.fontSize = '14px';
-  status.style.textAlign = 'center';
-  
-  if (found) {
-    status.textContent = `已筛选标签: #${tagName}`;
-    status.style.backgroundColor = '#e6f7ee';
-    status.style.color = '#30cf79';
-  } else {
-    status.textContent = `没有找到标签: #${tagName} 的记录`;
-    status.style.backgroundColor = '#fff0f0';
-    status.style.color = '#ff6b6b';
-  }
+  status.className = `filter-status ${found ? 'success' : 'error'}`;
+  status.textContent = found ? `已筛选标签: #${tagName}` : `没有找到标签: #${tagName} 的记录`;
   
   // 添加重置按钮
   const resetButton = document.createElement('button');
   resetButton.textContent = '重置筛选';
-  resetButton.style.marginLeft = '10px';
-  resetButton.style.padding = '3px 8px';
-  resetButton.style.border = '1px solid #ccc';
-  resetButton.style.borderRadius = '3px';
-  resetButton.style.background = '#f0f0f0';
-  resetButton.style.cursor = 'pointer';
+  resetButton.className = 'reset-button';
   
   resetButton.addEventListener('click', function() {
     document.querySelectorAll('.memo').forEach(memo => {
@@ -447,31 +456,13 @@ function createBackToTopButton() {
   backToTop.id = 'back-to-top';
   backToTop.textContent = '↑';
   backToTop.title = '回到顶部';
-  backToTop.style.position = 'fixed';
-  backToTop.style.bottom = '20px';
-  backToTop.style.right = '20px';
-  backToTop.style.width = '40px';
-  backToTop.style.height = '40px';
-  backToTop.style.borderRadius = '50%';
-  backToTop.style.background = '#30cf79';
-  backToTop.style.color = '#fff';
-  backToTop.style.border = 'none';
-  backToTop.style.fontSize = '20px';
-  backToTop.style.lineHeight = '40px';
-  backToTop.style.textAlign = 'center';
-  backToTop.style.cursor = 'pointer';
-  backToTop.style.display = 'none';
-  backToTop.style.zIndex = '1000';
+  backToTop.className = 'back-to-top';
   
   document.body.appendChild(backToTop);
   
   // 添加滚动事件
   window.addEventListener('scroll', function() {
-    if (window.scrollY > 300) {
-      backToTop.style.display = 'block';
-    } else {
-      backToTop.style.display = 'none';
-    }
+    backToTop.classList.toggle('visible', window.scrollY > 300);
   });
   
   // 添加点击事件

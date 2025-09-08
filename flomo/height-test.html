@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高度修复测试 - flomo增强版</title>
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+    }
+    
+    .test-header {
+      background: #30cf79;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+    
+    .test-info {
+      background: white;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    
+    .test-info span {
+      margin: 2px 5px;
+    }
+    
+    .status-good { color: #28a745; font-weight: bold; }
+    .status-bad { color: #dc3545; font-weight: bold; }
+    .status-info { color: #17a2b8; font-weight: bold; }
+    
+    .iframe-container {
+      height: calc(100vh - 80px);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    iframe {
+      width: 100%;
+      flex: 1;
+      border: none;
+      background: white;
+    }
+    
+    .controls {
+      background: white;
+      padding: 5px;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+    
+    button {
+      background: #30cf79;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background: #28b66a;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-header">
+    📐 高度修复测试面板 - flomo增强版
+  </div>
+  
+  <div class="test-info">
+    <span>📱 屏幕: <span id="screen-size"></span></span>
+    <span>📏 iframe高度: <span id="iframe-height"></span></span>
+    <span>🔧 修复状态: <span id="fix-status" class="status-info">检测中...</span></span>
+    <span>⏰ 时间: <span id="current-time"></span></span>
+  </div>
+  
+  <div class="iframe-container">
+    <iframe id="test-iframe" src="./enhancer.html"></iframe>
+  </div>
+  
+  <div class="controls">
+    <button onclick="refreshIframe()">🔄 刷新iframe</button>
+    <button onclick="checkHeight()">📏 检查高度</button>
+    <button onclick="forceResize()">🎯 强制调整</button>
+    <button onclick="openOriginal()">🚀 原始页面</button>
+  </div>
+
+  <script>
+    let statusCheckInterval;
+    
+    function updateStatus() {
+      const screenSize = document.getElementById('screen-size');
+      const iframeHeight = document.getElementById('iframe-height');
+      const fixStatus = document.getElementById('fix-status');
+      const currentTime = document.getElementById('current-time');
+      const iframe = document.getElementById('test-iframe');
+      
+      // 屏幕尺寸
+      screenSize.textContent = `${window.innerWidth}×${window.innerHeight}`;
+      
+      // iframe高度
+      const iframeRect = iframe.getBoundingClientRect();
+      iframeHeight.textContent = `${Math.round(iframeRect.height)}px`;
+      
+      // 修复状态检测
+      const expectedMinHeight = window.innerHeight - 150; // 大概的最小高度
+      if (iframeRect.height >= expectedMinHeight) {
+        fixStatus.textContent = '✅ 高度正常';
+        fixStatus.className = 'status-good';
+      } else if (iframeRect.height < expectedMinHeight * 0.5) {
+        fixStatus.textContent = '❌ 高度过小';
+        fixStatus.className = 'status-bad';
+      } else {
+        fixStatus.textContent = '⚠️ 高度偏小';
+        fixStatus.className = 'status-info';
+      }
+      
+      // 当前时间
+      currentTime.textContent = new Date().toLocaleTimeString();
+    }
+    
+    function refreshIframe() {
+      const iframe = document.getElementById('test-iframe');
+      iframe.src = iframe.src;
+      setTimeout(updateStatus, 1000);
+    }
+    
+    function checkHeight() {
+      updateStatus();
+      
+      // 尝试调用iframe内的修复函数
+      try {
+        const iframe = document.getElementById('test-iframe');
+        if (iframe.contentWindow && iframe.contentWindow.fixHeightIssues) {
+          iframe.contentWindow.fixHeightIssues();
+          setTimeout(updateStatus, 500);
+        }
+      } catch (e) {
+        console.log('无法调用iframe内的修复函数:', e);
+      }
+    }
+    
+    function forceResize() {
+      // 强制触发resize事件
+      window.dispatchEvent(new Event('resize'));
+      
+      // 尝试手动调整iframe高度
+      const iframe = document.getElementById('test-iframe');
+      const container = document.querySelector('.iframe-container');
+      const containerHeight = container.offsetHeight;
+      
+      iframe.style.height = containerHeight + 'px';
+      
+      setTimeout(() => {
+        iframe.style.height = '100%';
+        updateStatus();
+      }, 500);
+    }
+    
+    function openOriginal() {
+      window.open('./enhancer.html', '_blank');
+    }
+    
+    // 监听iframe加载完成
+    document.getElementById('test-iframe').addEventListener('load', function() {
+      setTimeout(updateStatus, 1000);
+      
+      // 监听来自iframe的消息
+      window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'HEIGHT_FIX_COMPLETE') {
+          setTimeout(updateStatus, 100);
+        }
+      });
+    });
+    
+    // 监听窗口大小变化
+    window.addEventListener('resize', function() {
+      setTimeout(updateStatus, 200);
+    });
+    
+    // 定期更新状态
+    statusCheckInterval = setInterval(updateStatus, 2000);
+    
+    // 初始更新
+    setTimeout(updateStatus, 500);
+    
+    // 页面卸载时清理
+    window.addEventListener('beforeunload', function() {
+      if (statusCheckInterval) {
+        clearInterval(statusCheckInterval);
+      }
+    });
+  </script>
+</body>
+</html>

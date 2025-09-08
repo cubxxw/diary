@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>空白修复测试 - flomo增强版</title>
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+      margin: 0;
+      padding: 0;
+      background: #e8f5e8;
+      overflow-x: hidden;
+    }
+    
+    .test-header {
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      color: white;
+      padding: 8px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .metrics {
+      background: white;
+      padding: 8px;
+      border-bottom: 2px solid #ddd;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      font-size: 11px;
+    }
+    
+    .metric {
+      text-align: center;
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid #eee;
+    }
+    
+    .metric-title {
+      font-weight: bold;
+      color: #666;
+      font-size: 10px;
+    }
+    
+    .metric-value {
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 2px;
+    }
+    
+    .good { background: #e8f5e8; color: #2d5a2d; border-color: #90c695; }
+    .warning { background: #fff3e0; color: #8b4513; border-color: #ffb74d; }
+    .error { background: #ffebee; color: #c62828; border-color: #ef5350; }
+    
+    .iframe-wrapper {
+      position: relative;
+      height: calc(100vh - 120px);
+      border: 2px solid #333;
+      margin: 4px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .overlay {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 10px;
+      z-index: 10;
+    }
+    
+    .controls {
+      background: #f8f9fa;
+      padding: 6px;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      cursor: pointer;
+      min-width: 60px;
+    }
+    
+    button:hover { background: #0056b3; }
+    button.success { background: #28a745; }
+    button.warning { background: #ffc107; color: #212529; }
+    button.danger { background: #dc3545; }
+  </style>
+</head>
+<body>
+  <div class="test-header">
+    🔍 空白检测器 - 实时监控iframe布局问题
+  </div>
+  
+  <div class="metrics">
+    <div class="metric" id="window-metric">
+      <div class="metric-title">窗口大小</div>
+      <div class="metric-value" id="window-size">-</div>
+    </div>
+    
+    <div class="metric" id="body-metric">
+      <div class="metric-title">Body宽度</div>
+      <div class="metric-value" id="body-width">-</div>
+    </div>
+    
+    <div class="metric" id="iframe-metric">
+      <div class="metric-title">iframe宽度</div>
+      <div class="metric-value" id="iframe-width">-</div>
+    </div>
+    
+    <div class="metric" id="overflow-metric">
+      <div class="metric-title">溢出检测</div>
+      <div class="metric-value" id="overflow-status">-</div>
+    </div>
+    
+    <div class="metric" id="ratio-metric">
+      <div class="metric-title">占比</div>
+      <div class="metric-value" id="usage-ratio">-</div>
+    </div>
+    
+    <div class="metric" id="space-metric">
+      <div class="metric-title">空白大小</div>
+      <div class="metric-value" id="wasted-space">-</div>
+    </div>
+  </div>
+  
+  <div class="iframe-wrapper">
+    <iframe id="test-iframe" src="./enhancer.html"></iframe>
+    <div class="overlay">
+      实时监控 • <span id="status-indicator">🟢</span>
+    </div>
+  </div>
+  
+  <div class="controls">
+    <button onclick="forceRefresh()">🔄 强制刷新</button>
+    <button onclick="callFixFunction()" class="success">🔧 调用修复</button>
+    <button onclick="simulateResize()" class="warning">📏 模拟调整</button>
+    <button onclick="toggleDebug()" class="warning">🐛 调试模式</button>
+    <button onclick="exportReport()" class="info">📊 导出报告</button>
+  </div>
+
+  <script>
+    let debugMode = false;
+    let updateInterval;
+    
+    function updateMetrics() {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const bodyWidth = document.body.scrollWidth;
+      const iframe = document.getElementById('test-iframe');
+      const iframeWidth = iframe.offsetWidth;
+      
+      // 更新显示
+      document.getElementById('window-size').textContent = `${windowWidth}×${windowHeight}`;
+      document.getElementById('body-width').textContent = `${bodyWidth}px`;
+      document.getElementById('iframe-width').textContent = `${iframeWidth}px`;
+      
+      // 计算溢出
+      const overflow = bodyWidth > windowWidth;
+      const overflowAmount = Math.max(0, bodyWidth - windowWidth);
+      document.getElementById('overflow-status').textContent = overflow ? `+${overflowAmount}px` : '正常';
+      
+      // 计算使用率
+      const ratio = Math.round((iframeWidth / windowWidth) * 100);
+      document.getElementById('usage-ratio').textContent = `${ratio}%`;
+      
+      // 计算浪费的空间
+      const wastedSpace = windowWidth - iframeWidth;
+      document.getElementById('wasted-space').textContent = wastedSpace > 0 ? `${wastedSpace}px` : '0px';
+      
+      // 更新样式
+      updateMetricStyles(windowWidth, bodyWidth, iframeWidth, ratio, wastedSpace);
+      
+      if (debugMode) {
+        console.log('📊 Metrics:', {
+          windowWidth, bodyWidth, iframeWidth, overflow, ratio, wastedSpace
+        });
+      }
+    }
+    
+    function updateMetricStyles(windowWidth, bodyWidth, iframeWidth, ratio, wastedSpace) {
+      // Window metric
+      const windowMetric = document.getElementById('window-metric');
+      windowMetric.className = 'metric good';
+      
+      // Body width
+      const bodyMetric = document.getElementById('body-metric');
+      bodyMetric.className = bodyWidth <= windowWidth ? 'metric good' : 'metric error';
+      
+      // iframe width  
+      const iframeMetric = document.getElementById('iframe-metric');
+      iframeMetric.className = ratio >= 90 ? 'metric good' : ratio >= 70 ? 'metric warning' : 'metric error';
+      
+      // Overflow
+      const overflowMetric = document.getElementById('overflow-metric');
+      overflowMetric.className = bodyWidth <= windowWidth ? 'metric good' : 'metric error';
+      
+      // Ratio
+      const ratioMetric = document.getElementById('ratio-metric');
+      ratioMetric.className = ratio >= 90 ? 'metric good' : ratio >= 70 ? 'metric warning' : 'metric error';
+      
+      // Wasted space
+      const spaceMetric = document.getElementById('space-metric');
+      spaceMetric.className = wastedSpace < 20 ? 'metric good' : wastedSpace < 50 ? 'metric warning' : 'metric error';
+      
+      // Status indicator
+      const indicator = document.getElementById('status-indicator');
+      if (ratio >= 90 && bodyWidth <= windowWidth) {
+        indicator.textContent = '🟢'; // 完美
+      } else if (ratio >= 70 && bodyWidth <= windowWidth + 10) {
+        indicator.textContent = '🟡'; // 可接受
+      } else {
+        indicator.textContent = '🔴'; // 有问题
+      }
+    }
+    
+    function forceRefresh() {
+      const iframe = document.getElementById('test-iframe');
+      iframe.src = iframe.src;
+    }
+    
+    function callFixFunction() {
+      try {
+        // 尝试调用各种修复函数
+        if (window.fixRightSpace) window.fixRightSpace();
+        if (window.emergencyHeightFix) window.emergencyHeightFix();
+        if (window.fixHeightIssues) window.fixHeightIssues();
+        
+        // 尝试调用iframe内的修复函数
+        const iframe = document.getElementById('test-iframe');
+        if (iframe.contentWindow) {
+          if (iframe.contentWindow.fixRightSpace) iframe.contentWindow.fixRightSpace();
+          if (iframe.contentWindow.emergencyHeightFix) iframe.contentWindow.emergencyHeightFix();
+        }
+        
+        setTimeout(updateMetrics, 500);
+      } catch (e) {
+        console.error('修复函数调用失败:', e);
+      }
+    }
+    
+    function simulateResize() {
+      window.dispatchEvent(new Event('resize'));
+      setTimeout(updateMetrics, 200);
+    }
+    
+    function toggleDebug() {
+      debugMode = !debugMode;
+      console.log('Debug mode:', debugMode ? 'ON' : 'OFF');
+    }
+    
+    function exportReport() {
+      const metrics = {
+        timestamp: new Date().toISOString(),
+        windowSize: document.getElementById('window-size').textContent,
+        bodyWidth: document.getElementById('body-width').textContent,
+        iframeWidth: document.getElementById('iframe-width').textContent,
+        overflowStatus: document.getElementById('overflow-status').textContent,
+        usageRatio: document.getElementById('usage-ratio').textContent,
+        wastedSpace: document.getElementById('wasted-space').textContent,
+        userAgent: navigator.userAgent
+      };
+      
+      console.log('📊 Layout Report:', metrics);
+      
+      // 复制到剪贴板
+      navigator.clipboard.writeText(JSON.stringify(metrics, null, 2))
+        .then(() => alert('报告已复制到剪贴板'))
+        .catch(() => alert('报告已输出到控制台'));
+    }
+    
+    // 监听iframe加载
+    document.getElementById('test-iframe').addEventListener('load', function() {
+      setTimeout(updateMetrics, 1000);
+    });
+    
+    // 监听窗口大小变化
+    window.addEventListener('resize', function() {
+      setTimeout(updateMetrics, 100);
+    });
+    
+    // 开始定期更新
+    updateInterval = setInterval(updateMetrics, 1000);
+    
+    // 初始更新
+    setTimeout(updateMetrics, 500);
+    
+    // 页面卸载时清理
+    window.addEventListener('beforeunload', function() {
+      if (updateInterval) clearInterval(updateInterval);
+    });
+  </script>
+</body>
+</html>

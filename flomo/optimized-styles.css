@@ -1,0 +1,257 @@
+/* Optimized styles to replace inline CSS operations */
+
+/* Search container styles */
+.search-container {
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px 0;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #efefef;
+  border-radius: 3px;
+  margin-right: 10px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #30cf79;
+  outline: none;
+}
+
+.search-button {
+  padding: 8px 15px;
+  background: #30cf79;
+  border: none;
+  border-radius: 3px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background: #28b66a;
+}
+
+/* Dark mode toggle */
+.dark-mode-toggle {
+  margin-left: 10px;
+  padding: 9px 12px;
+  background: #efefef;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.1);
+}
+
+/* Status messages */
+.search-status, .filter-status {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 3px;
+  font-size: 14px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.search-status.success, .filter-status.success {
+  background-color: #e6f7ee;
+  color: #30cf79;
+}
+
+.search-status.error, .filter-status.error {
+  background-color: #fff0f0;
+  color: #ff6b6b;
+}
+
+.reset-button, .clear-filter {
+  padding: 3px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #f0f0f0;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.reset-button:hover, .clear-filter:hover {
+  background: #e0e0e0;
+}
+
+/* Tag cloud optimized styles */
+.tag-cloud {
+  margin: 20px 0;
+  padding: 15px;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
+  transition: box-shadow 0.3s ease;
+}
+
+.tag-cloud:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.tag-cloud h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #454545;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 8px;
+}
+
+.tag-cloud-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-cloud-item {
+  padding: 5px 10px;
+  background: #f5f5f5;
+  border-radius: 15px;
+  font-size: 12px;
+  color: #30cf79;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.tag-cloud-item:hover {
+  background: #30cf79;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(48, 207, 121, 0.3);
+}
+
+/* Back to top button */
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #30cf79;
+  color: #fff;
+  border: none;
+  font-size: 20px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.back-to-top.visible {
+  display: block;
+}
+
+.back-to-top:hover {
+  background: #28b66a;
+  transform: scale(1.1);
+}
+
+/* Enhanced layout styles */
+.enhanced-layout {
+  transition: all 0.2s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.enhanced-memo-content p {
+  line-height: 2;
+}
+
+.enhanced-memo-content strong {
+  color: #30cf79;
+}
+
+.enhanced-memo-time {
+  margin-bottom: 10px;
+}
+
+.enhanced-memo-link,
+.enhanced-memo-tag {
+  display: inline-block;
+  color: #30cf79;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Performance optimizations */
+.memo.hidden {
+  display: none !important;
+}
+
+.memo.visible {
+  display: block !important;
+}
+
+.loading-state {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.highlight {
+  background-color: #ffffa0;
+  font-weight: bold;
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+/* Dark mode optimized styles */
+body.dark-mode .search-input {
+  background: #444;
+  border-color: #555;
+  color: #eee;
+}
+
+body.dark-mode .search-button {
+  background: #30cf79;
+}
+
+body.dark-mode .dark-mode-toggle {
+  background: #555;
+  color: #eee;
+}
+
+body.dark-mode .tag-cloud {
+  background: #333;
+  border-color: #444;
+}
+
+body.dark-mode .tag-cloud h3 {
+  color: #eee;
+  border-color: #444;
+}
+
+body.dark-mode .tag-cloud-item {
+  background: #555;
+  color: #30cf79;
+}
+
+body.dark-mode .search-status.success,
+body.dark-mode .filter-status.success {
+  background-color: #1a4d2e;
+  color: #4ade80;
+}
+
+body.dark-mode .search-status.error,
+body.dark-mode .filter-status.error {
+  background-color: #4d1a1a;
+  color: #f87171;
+}

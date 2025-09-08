@@ -13,6 +13,59 @@
   --header-bg: #ffffff;
 }
 
+/* 长文本处理样式 */
+.long-text {
+  display: inline-block;
+  word-break: break-all;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+/* 确保在所有设备上正确显示 */
+@media screen {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* 图片响应式优化 */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+/* 移动设备专用样式 */
+body.mobile-device {
+  /* 滚动更流畅 */
+  -webkit-overflow-scrolling: touch;
+}
+
+body.mobile-device .memo {
+  /* 添加轻微点击反馈 */
+  transition: background-color 0.2s ease;
+}
+
+body.mobile-device .memo:active {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+body.mobile-device .tag-highlight,
+body.mobile-device .memo .content a {
+  /* 更大的点击区域 */
+  padding: 3px 8px;
+  margin: 2px;
+}
+
+/* 防止沉浸式视图打开时背景滚动 */
+body.immersive-active {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -25,6 +78,9 @@ body {
   color: var(--text-color);
   line-height: 1.6;
   transition: background-color 0.3s ease;
+  -webkit-text-size-adjust: 100%; /* 防止iOS设备上的字体大小自动调整 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Dark mode styles */
@@ -206,18 +262,318 @@ header {
   padding-left: 20px;
 }
 
-/* 调整响应式布局 */
+/* 改进移动端响应式布局 */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
   
   .sidebar {
     width: 100%;
+    min-width: 100%;
     border-right: none;
     border-bottom: 1px solid var(--border-color);
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    padding-right: 0;
+  }
+  
+  .main-content {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+  }
+  
+  header, .memos {
+    width: 100%;
+    padding: 10px;
+    max-width: 100%;
+  }
+  
+  header .top {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 10px 10px;
+  }
+  
+  header .top .user {
+    padding: 10px 0;
+    width: 100%;
+  }
+  
+  header .top .filter {
+    margin-top: 10px;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .custom-select {
+    width: 48%;
+    margin-right: 0;
+  }
+  
+  header .top .filter button {
+    width: 48%;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .memo {
+    padding: 12px !important;
+    margin: 10px 5px !important;
+    width: calc(100% - 10px) !important;
+  }
+  
+  .memo .content {
+    font-size: 15px;
+  }
+  
+  .right-sidebar {
+    position: static;
+    width: 100%;
+    margin-top: 15px;
+    max-height: none;
+  }
+  
+  .immersive-content {
+    width: 95%;
+    padding: 20px;
+    max-height: 90vh;
+  }
+  
+  .immersive-body {
+    font-size: 16px;
+  }
+  
+  /* 优化移动端交互元素大小 */
+  .immersive-close {
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+  }
+  
+  .copy-text-btn, .copy-image-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+  
+  /* 确保搜索框在移动设备上的良好体验 */
+  .search-container {
+    width: 100%;
+    margin: 10px 0;
+  }
+  
+  .search-input {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px;
+  }
+  
+  .search-button {
+    padding: 10px 15px;
+  }
+  
+  /* 适配小屏幕操作按钮 */
+  .dark-mode-toggle {
+    bottom: 70px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .back-to-top {
+    bottom: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  /* 优化代码块在移动端的显示 */
+  .memo .content pre,
+  .memo .content code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 14px;
+    padding: 8px;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  
+  /* 防止长文本破坏移动端布局 */
+  .memo .content p,
+  .memo .content a,
+  .tag-highlight {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  
+  /* 表格优化 */
+  .memo .content table {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+  }
+  
+  /* 增强型溢出处理 */
+  .memo,
+  .memo .content,
+  .immersive-content,
+  .immersive-body {
+    max-width: 100%;
+    width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  
+  /* 防止任何元素超出屏幕宽度 */
+  .memo *,
+  .immersive-body * {
+    max-width: 100%;
+  }
+  
+  /* 控制代码块和预格式化文本 */
+  pre, code {
+    white-space: pre-wrap !important;
+    overflow-x: hidden !important;
+    max-width: 100%;
+  }
+  
+  /* 移动端容器宽度控制 */
+  .container,
+  .main-content,
+  .memos,
+  .memo {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* 调整具体容器的内边距 */
+  .container {
+    padding: 0 !important;
+  }
+  
+  .memos {
+    padding: 5px !important;
+  }
+  
+  .memo {
+    padding: 12px !important;
+    margin: 10px 5px !important;
+    width: calc(100% - 10px) !important;
+  }
+  
+  /* 表格处理 */
+  table {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto;
+  }
+  
+  /* 强制图片不超出容器 */
+  img {
+    height: auto !important;
+    max-width: 100% !important;
+  }
+  
+  /* 确保内联元素不导致溢出 */
+  .tag-highlight, 
+  a, 
+  span, 
+  strong, 
+  em, 
+  b, 
+  i {
+    display: inline;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+}
+
+/* 超小屏幕设备额外适配 */
+@media (max-width: 480px) {
+  .memo {
+    padding: 12px;
+    border-radius: 6px;
+  }
+  
+  .memo .content {
+    font-size: 14px;
+  }
+  
+  .memo .time {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  header .logo {
+    padding: 10px 0;
+  }
+  
+  header .logo svg {
+    width: 100px;
+    height: auto;
+  }
+  
+  .immersive-actions {
+    flex-wrap: wrap;
+  }
+  
+  .copy-text-btn, .copy-image-btn {
+    width: 100%;
+    margin-bottom: 8px;
+    justify-content: center;
+  }
+}
+
+/* 添加触摸屏体验优化 */
+@media (hover: none) {
+  .tag-list a, 
+  .sidebar-menu a, 
+  .memo,
+  .immersive-close,
+  .copy-text-btn, 
+  .copy-image-btn,
+  .dark-mode-toggle,
+  .back-to-top {
+    -webkit-tap-highlight-color: transparent; /* 移除触摸时的高亮 */
+  }
+  
+  /* 增加点击区域大小 */
+  .tag-list a, 
+  .sidebar-menu a {
+    padding: 12px;
+  }
+  
+  /* 确保交互元素间距适合触摸 */
+  .tag-list li,
+  .sidebar-menu li {
+    margin-bottom: 10px;
   }
 }
 
@@ -420,6 +776,11 @@ body.dark-mode .same-as-selected {
 .memo .content {
   color: var(--text-color);
   font-size: 16px;
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .memo .content p {
@@ -453,10 +814,11 @@ body.dark-mode .same-as-selected {
 
 .memo .files img {
   max-width: 100%;
-  border: 1px solid var(--border-color);
+  display: block;
+  margin-bottom: 10px;
   border-radius: 8px;
-  margin: 10px 0;
   transition: all 0.3s ease;
+  object-fit: cover;
 }
 
 .memo .files img:hover {
@@ -658,38 +1020,6 @@ body.dark-mode .same-as-selected {
 .back-to-top:hover {
   transform: scale(1.1);
   background-color: var(--primary-hover);
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  header, .memos {
-    width: 100%;
-    padding: 10px;
-  }
-  
-  header .top {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  header .top .filter {
-    margin-top: 15px;
-    width: 100%;
-    justify-content: space-between;
-  }
-  
-  .custom-select {
-    width: 48%;
-    margin-right: 0;
-  }
-  
-  header .top .filter button {
-    width: 48%;
-  }
-  
-  .memo {
-    padding: 15px;
-  }
 }
 
 /* Animation for new memos */
@@ -933,4 +1263,81 @@ body.immersive-active main {
 
 .tag-section h3 i {
   color: var(--primary-color);
+}
+```
+
+/* 标签部分样式 */
+.tag-section {
+  margin-bottom: 30px;
+}
+
+.tag-section h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tag-section h3 i {
+  color: var(--primary-color);
+}
+
+/* 优化标签云样式 */
+.tag-cloud {
+  margin: 20px 0;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.tag-cloud h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.tag-cloud > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag-cloud span {
+  padding: 6px 12px;
+  background: var(--tag-bg, #f5f5f5);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--primary-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border-light);
+}
+
+.tag-cloud span:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* 标签高亮样式 */
+.tag-highlight {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--tag-bg, #f5f5f5);
+  border-radius: 12px;
+  color: var(--primary-color);
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag-highlight:hover {
+  background: var(--primary-color);
+  color: white;
 }

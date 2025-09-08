@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mobile Test - flomo 移动端修复测试</title>
+  <!-- 引入修复脚本 -->
+  <script src="load-optimizations.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    .test-info { 
+      background: #e6f7ff; 
+      padding: 15px; 
+      margin: 10px; 
+      border-radius: 5px; 
+      font-size: 14px;
+    }
+    .status { font-weight: bold; color: #1890ff; }
+  </style>
+</head>
+<body>
+  <div class="test-info">
+    <h3>🔧 移动端修复状态检测</h3>
+    <p><span class="status">视口设置:</span> <span id="viewport-status">检测中...</span></p>
+    <p><span class="status">屏幕宽度:</span> <span id="screen-width"></span>px</p>
+    <p><span class="status">body溢出:</span> <span id="overflow-status">检测中...</span></p>
+    <p><span class="status">修复状态:</span> <span id="fix-status">加载中...</span></p>
+  </div>
+
+  <!-- 模拟原始页面结构 -->
+  <header>
+    <div class="logo">
+      <h1>flomo · 浮墨笔记</h1>
+    </div>
+    <div class="top">
+      <div class="user">
+        <div class="name">测试用户</div>
+        <div class="date">2024年测试</div>
+      </div>
+      <div class="filter">
+        <button>全部标签</button>
+        <button>暗黑模式</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="memos">
+    <div class="memo">
+      <div class="time">2024-01-21 15:35</div>
+      <div class="content">
+        <p>这是一个测试备忘录，用来验证移动端显示是否正常。这里有一个很长的URL来测试文本换行：https://github.com/very-long-repository-name/extremely-long-project-name-for-testing</p>
+        <p>还有一些标签测试 #移动端优化 #响应式设计 #CSS修复</p>
+      </div>
+    </div>
+    
+    <div class="memo">
+      <div class="time">2024-01-21 16:20</div>
+      <div class="content">
+        <p>第二个测试备忘录，包含更多内容以测试布局。</p>
+        <p>长文本测试：ThisIsAVeryLongWordWithoutSpacesThatShouldBreakProperlyOnMobileDevicesWithoutCausingHorizontalScrolling</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 检测移动端修复状态
+    function checkMobileFixes() {
+      const viewport = document.querySelector('meta[name="viewport"]');
+      const viewportStatus = document.getElementById('viewport-status');
+      const screenWidth = document.getElementById('screen-width');
+      const overflowStatus = document.getElementById('overflow-status');
+      const fixStatus = document.getElementById('fix-status');
+      
+      // 检测视口设置
+      if (viewport && viewport.content.includes('width=device-width')) {
+        viewportStatus.textContent = '✅ 已修复';
+        viewportStatus.style.color = 'green';
+      } else {
+        viewportStatus.textContent = '❌ 未设置';
+        viewportStatus.style.color = 'red';
+      }
+      
+      // 显示屏幕宽度
+      screenWidth.textContent = window.innerWidth;
+      
+      // 检测body溢出
+      const bodyOverflow = window.getComputedStyle(document.body).overflowX;
+      if (bodyOverflow === 'hidden') {
+        overflowStatus.textContent = '✅ 已修复';
+        overflowStatus.style.color = 'green';
+      } else {
+        overflowStatus.textContent = '❌ 可能溢出';
+        overflowStatus.style.color = 'red';
+      }
+      
+      // 总体状态
+      fixStatus.textContent = '✅ 修复已加载';
+      fixStatus.style.color = 'green';
+    }
+    
+    // DOM加载完成后检测
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(checkMobileFixes, 500);
+    });
+    
+    // 窗口大小变化时重新检测
+    window.addEventListener('resize', function() {
+      setTimeout(checkMobileFixes, 100);
+    });
+  </script>
+</body>
+</html>

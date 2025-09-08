@@ -1,0 +1,256 @@
+/* 移动端紧急修复补丁 */
+
+/* 强制移动端视口设置 */
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+
+/* 防止所有元素超出屏幕 */
+* {
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* 移动端专用布局 */
+@media (max-width: 768px) {
+  /* 页面结构 */
+  .container {
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+  }
+  
+  /* Header修复 */
+  header {
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 0 10px !important;
+    box-sizing: border-box !important;
+  }
+  
+  header .logo {
+    padding: 20px 0 !important;
+  }
+  
+  header .top {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 10px !important;
+    width: 100% !important;
+  }
+  
+  header .top .user {
+    width: 100% !important;
+    text-align: center;
+    padding: 10px 0 !important;
+  }
+  
+  header .top .filter {
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    margin-top: 15px;
+  }
+  
+  /* 按钮修复 */
+  header .top .filter button {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 12px !important;
+    font-size: 16px !important;
+  }
+  
+  /* 选择框修复 */
+  .custom-select {
+    width: 100% !important;
+    margin-right: 0 !important;
+    margin-bottom: 10px !important;
+  }
+  
+  /* 内容区域 */
+  .memos {
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 10px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Memo卡片 */
+  .memo {
+    width: calc(100% - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    margin: 10px auto !important;
+    padding: 15px !important;
+    box-sizing: border-box !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  
+  /* 文本内容修复 */
+  .memo .content {
+    width: 100% !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+  }
+  
+  .memo .content p,
+  .memo .content div,
+  .memo .content span {
+    width: 100% !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  
+  /* 长文本和链接处理 */
+  .memo .content a,
+  .long-text {
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+    display: inline-block;
+  }
+  
+  /* 图片处理 */
+  .memo img,
+  .memo .files img {
+    max-width: 100% !important;
+    height: auto !important;
+    width: auto !important;
+  }
+  
+  /* 搜索框修复 */
+  .search-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+  
+  .search-input {
+    width: calc(100% - 80px) !important;
+    max-width: calc(100% - 80px) !important;
+  }
+  
+  .search-button {
+    width: 70px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* 标签云修复 */
+  .tag-cloud {
+    width: calc(100% - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    margin: 10px auto !important;
+    box-sizing: border-box !important;
+  }
+  
+  .tag-cloud-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* 浮动按钮位置调整 */
+  .back-to-top {
+    bottom: 80px !important;
+    right: 15px !important;
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 18px !important;
+  }
+  
+  .dark-mode-toggle {
+    bottom: 15px !important;
+    right: 15px !important;
+    width: 45px !important;
+    height: 45px !important;
+  }
+  
+  /* 状态消息修复 */
+  .search-status,
+  .filter-status {
+    width: calc(100% - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    margin: 10px auto !important;
+    padding: 15px !important;
+    box-sizing: border-box !important;
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+  
+  .reset-button,
+  .clear-filter {
+    margin-top: 10px !important;
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 200px !important;
+  }
+  
+  /* 沉浸式视图修复 */
+  .immersive-content {
+    width: 95% !important;
+    max-width: 95vw !important;
+    max-height: 90vh !important;
+    padding: 20px !important;
+    margin: 5px !important;
+    box-sizing: border-box !important;
+  }
+  
+  .immersive-body {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  
+  /* 确保代码块不会溢出 */
+  pre,
+  code {
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    overflow-x: auto !important;
+    max-width: 100% !important;
+  }
+  
+  /* 表格处理 */
+  table {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    display: block !important;
+  }
+}
+
+/* 超小屏幕额外处理 */
+@media (max-width: 480px) {
+  .memo {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+  
+  .memo .content {
+    font-size: 14px !important;
+  }
+  
+  header .top .filter button {
+    font-size: 14px !important;
+    padding: 10px !important;
+  }
+}

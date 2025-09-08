@@ -1,0 +1,240 @@
+/* flomo增强版移动端专用修复 */
+
+/* 基础视口设置 */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+}
+
+/* 移动端响应式布局 */
+@media (max-width: 768px) {
+  /* Header调整 */
+  #enhancer-header {
+    padding: 8px 10px !important;
+    flex-wrap: wrap !important;
+  }
+  
+  #enhancer-header h1 {
+    font-size: 16px !important;
+    margin-bottom: 5px;
+  }
+  
+  .enhancer-buttons {
+    width: 100% !important;
+    justify-content: space-between !important;
+    margin-top: 8px;
+  }
+  
+  .enhancer-buttons button {
+    flex: 1 !important;
+    margin: 0 2px !important;
+    font-size: 12px !important;
+    padding: 6px 8px !important;
+  }
+  
+  /* 主容器布局调整 */
+  #main-container {
+    flex-direction: column !important;
+    height: calc(100vh - 80px) !important;
+  }
+  
+  /* 侧边栏移动端适配 */
+  #sidebar {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 40vh !important;
+    position: relative !important;
+    order: 2 !important;
+    border-right: none !important;
+    border-top: 1px solid #e0e0e0 !important;
+  }
+  
+  #sidebar.collapsed {
+    width: 100% !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  /* iframe容器调整 */
+  #iframe-container {
+    order: 1 !important;
+    height: calc(100vh - 120px) !important;
+    min-height: 500px !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  /* 侧边栏内容优化 */
+  .sidebar-section {
+    padding: 10px !important;
+  }
+  
+  .sidebar-section h3 {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  /* 搜索框移动端优化 */
+  .search-box {
+    flex-direction: column !important;
+    gap: 5px !important;
+  }
+  
+  .search-box input {
+    border-radius: 4px !important;
+    font-size: 16px !important; /* 防止iOS缩放 */
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  .search-box button {
+    border-radius: 4px !important;
+    width: 100% !important;
+    padding: 10px !important;
+  }
+  
+  /* 标签云优化 */
+  .tag-cloud {
+    gap: 5px !important;
+  }
+  
+  .tag {
+    font-size: 11px !important;
+    padding: 3px 6px !important;
+    white-space: nowrap !important;
+  }
+  
+  /* 下拉选择优化 */
+  .date-filter select {
+    font-size: 16px !important; /* 防止iOS缩放 */
+    padding: 10px !important;
+  }
+  
+  /* 操作按钮优化 */
+  .action-button {
+    padding: 12px 10px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* 超小屏幕适配 */
+@media (max-width: 480px) {
+  #enhancer-header {
+    padding: 5px 8px !important;
+  }
+  
+  #enhancer-header h1 {
+    font-size: 14px !important;
+  }
+  
+  .enhancer-buttons button {
+    font-size: 11px !important;
+    padding: 4px 6px !important;
+  }
+  
+  #iframe-container {
+    height: 55vh !important;
+    min-height: 350px !important;
+  }
+  
+  #sidebar {
+    max-height: 45vh !important;
+  }
+  
+  .sidebar-section {
+    padding: 8px !important;
+  }
+  
+  .tag {
+    font-size: 10px !important;
+    padding: 2px 5px !important;
+  }
+}
+
+/* iframe内容响应式处理 */
+iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+}
+
+/* 修复iframe高度问题 */
+@media (max-width: 768px) {
+  /* 确保主容器使用flex布局 */
+  #main-container {
+    display: flex !important;
+    flex-direction: column !important;
+    height: calc(100vh - 60px) !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* iframe容器占满剩余空间 */
+  #iframe-container {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* iframe填满容器 */
+  iframe {
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+    border: none !important;
+  }
+  
+  /* 侧边栏限制高度 */
+  #sidebar {
+    max-height: 200px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-y: auto !important;
+    flex-shrink: 0 !important;
+    order: 2 !important;
+    margin: 0 !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+  }
+  
+  #sidebar.collapsed {
+    max-height: 0 !important;
+    overflow: hidden !important;
+  }
+}
+
+/* 桌面端也应用类似修复 */
+@media (min-width: 769px) {
+  #main-container {
+    height: calc(100vh - 60px) !important;
+    display: flex !important;
+  }
+  
+  #iframe-container {
+    flex: 1 !important;
+    display: flex !important;
+    min-height: 0 !important;
+  }
+  
+  iframe {
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1 !important;
+  }
+}
