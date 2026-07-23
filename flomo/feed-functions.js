@@ -477,7 +477,7 @@ const feedFunctions = {
       
       // 网址和二维码占位
       const url = document.createElement('div');
-      url.textContent = 'nsddd.top';
+      url.textContent = 'cubxxw.com';
       
       const qrPlaceholder = document.createElement('div');
       qrPlaceholder.textContent = 'Xinwei Xiong Blog';

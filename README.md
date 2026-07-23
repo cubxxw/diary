@@ -83,7 +83,7 @@ A modern web application that enhances flomo's exported notes with AI capabiliti
 ## Links
 
 - [GitHub Repository](https://github.com/cubxxw/diary)
-- [Personal Blog](https://nsddd.top)
+- [Personal Blog](https://cubxxw.com)
 
 ## License
 
